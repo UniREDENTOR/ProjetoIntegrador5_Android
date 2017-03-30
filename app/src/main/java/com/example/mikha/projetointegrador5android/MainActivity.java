@@ -21,16 +21,13 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextPrincipal;
     Button botaoDeFalar;
     String oqSeraFalado;
-//    boolean usuarioDeletouCaracter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         editTextPrincipal = (EditText) findViewById(R.id.EditTextEntrada);
         botaoDeFalar = (Button) findViewById(R.id.ButtonTextToSpeech);
-//        usuarioDeletouCaracter = false;
         final Locale localeBR = new Locale("pt","BR");
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -42,33 +39,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        editTextPrincipal.setOnKeyListener(new View.OnKeyListener() {
-//            @Override
-//            public boolean onKey(View v, int keyCode, KeyEvent event) {
-//                Log.e("key",keyCode+"");
-//                Log.e("user",usuarioDeletouCaracter+"");
-//                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN){
-//                    usuarioDeletouCaracter = true;
-//                    return usuarioDeletouCaracter;
-//
-//                }
-//                return usuarioDeletouCaracter;
-//
-//
-//            }
-//        });
-
         editTextPrincipal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (!usuarioDeletouCaracter){
-                    editTextPrincipal.addTextChangedListener(textWatcher);
-//                }else{
-//                    Toast.makeText(getApplicationContext(), "O usuario apagou", Toast.LENGTH_SHORT).show();
-//                }
+                editTextPrincipal.addTextChangedListener(textWatcher);
             }
         });
-
 
         botaoDeFalar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     @Override
     public void onPause(){
@@ -120,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void vamosFalar(){
         String ToSpeak = oqSeraFalado;
-        //Toast.makeText(getApplicationContext(), ToSpeak, Toast.LENGTH_SHORT).show();
         tts.setPitch(1);
         tts.setSpeechRate(1);
         tts.speak(ToSpeak, TextToSpeech.QUEUE_FLUSH, null);
