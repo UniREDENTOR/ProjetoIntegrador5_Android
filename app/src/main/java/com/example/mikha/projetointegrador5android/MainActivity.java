@@ -1,18 +1,20 @@
 package com.example.mikha.projetointegrador5android;
 
+import android.app.FragmentTransaction;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.BaseInputConnection;
-import android.view.inputmethod.InputConnection;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.mikha.projetointegrador5android.Fragments.TesteFragment;
+
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -49,7 +51,19 @@ public class MainActivity extends AppCompatActivity {
         botaoDeFalar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                oqSeraFalado = editTextPrincipal.getText().toString();
+                Bundle bundle = new Bundle();
+                String textoParaFragment = editTextPrincipal.getText().toString();
+                bundle.putString("oqSeraFalado", textoParaFragment);
+                TesteFragment testefragment = new TesteFragment();
+                testefragment.setArguments(bundle);
+                FragmentManager fm = getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTrans = fm.beginTransaction();
+                fragmentTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+                //getSupportFragmentManager().beginTransaction().replace(R.id.LayoutMain, testefragment).commit();
+                fragmentTrans.replace(R.id.linearlayoutfragment, testefragment);
+                fragmentTrans.addToBackStack("fragment");
+                fragmentTrans.commit();
+                oqSeraFalado = textoParaFragment;
                 vamosFalar();
             }
         });
@@ -79,9 +93,12 @@ public class MainActivity extends AppCompatActivity {
                     oqSeraFalado = oqSeraFalado.substring(oqSeraFalado.length()-1);
                     vamosFalar();
                 }
+
             }else{
                 vamosFalar();
             }
+
+
             Log.e("count", count + "");
             Log.e("before", before + "");
 
@@ -94,9 +111,9 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void vamosFalar(){
-        String ToSpeak = oqSeraFalado;
+        String toSpeak = oqSeraFalado;
         tts.setPitch(1);
         tts.setSpeechRate(1);
-        tts.speak(ToSpeak, TextToSpeech.QUEUE_FLUSH, null);
+        tts.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);
     }
 }
