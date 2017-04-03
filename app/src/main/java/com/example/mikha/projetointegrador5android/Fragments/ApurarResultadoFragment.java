@@ -3,6 +3,7 @@ package com.example.mikha.projetointegrador5android.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ public class ApurarResultadoFragment extends Fragment {
 
     private TextView resultadoPalavra;
     String palavraDigitada;
+    String resposta;
 
 
     public ApurarResultadoFragment() {
@@ -30,10 +32,20 @@ public class ApurarResultadoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_apurar_resultado, container, false);
         resultadoPalavra = (TextView) view.findViewById(R.id.TextViewTesteFragment);
-        palavraDigitada = this.getArguments().getString("oqSeraFalado");
-        resultadoPalavra.setText(palavraDigitada);
+
+        palavraDigitada = this.getArguments().getBundle("bundle_oqSeraFalado").toString();
+        Log.v("palavra", palavraDigitada);
+        resposta = this.getArguments().getBundle("bundle_resposta").toString();
+//        resultadoPalavra.setText(palavraDigitada);
+
+        if (resposta == palavraDigitada){
+            resultadoPalavra.setText(palavraDigitada);
+        }else{
+            resultadoPalavra.setText("Você errou! =(");
+        }
         return view;
     }
+
 
 
 }
