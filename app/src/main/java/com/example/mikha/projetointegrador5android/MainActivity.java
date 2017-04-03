@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.mikha.projetointegrador5android.Fragments.ApurarResultadoFragment;
+import com.example.mikha.projetointegrador5android.Fragments.ImagemFragment;
 
 import java.util.Locale;
 
@@ -23,8 +25,14 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextPrincipal;
     Button botaoDeFalar;
     String oqSeraFalado;
+    String respDaImagem;
+
     LinearLayout linearLayoutDoEditTextEButton;
     LinearLayout linearLayoutDoTextViewDoFragment;
+    LinearLayout linearLayoutDaImagemDoFragment;
+
+    FragmentManager fm = getSupportFragmentManager();
+    android.support.v4.app.FragmentTransaction fragmentTrans = fm.beginTransaction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +40,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         editTextPrincipal = (EditText) findViewById(R.id.EditTextEntrada);
         botaoDeFalar = (Button) findViewById(R.id.ButtonTextToSpeech);
+        linearLayoutDaImagemDoFragment = (LinearLayout) findViewById(R.id.linearlayoutimagem);
         linearLayoutDoEditTextEButton = (LinearLayout) findViewById(R.id.linearLayoutDoEditTextEButton);
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
+
+        fragmentTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+
+        final ImagemFragment imagemFrag = new ImagemFragment();
+        fragmentTrans.replace(R.id.linearlayoutimagem, imagemFrag).addToBackStack("fragment").commit();
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -55,21 +69,21 @@ public class MainActivity extends AppCompatActivity {
         botaoDeFalar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Bundle bundle = new Bundle();
+                ApurarResultadoFragment fragmentApurarResultado = new ApurarResultadoFragment();
                 String textoParaFragment = editTextPrincipal.getText().toString();
+
+                respDaImagem = imagemFrag.respostaDaImagem;
+
                 bundle.putString("oqSeraFalado", textoParaFragment);
-                ApurarResultadoFragment testefragment = new ApurarResultadoFragment();
-                testefragment.setArguments(bundle);
-                FragmentManager fm = getSupportFragmentManager();
-                android.support.v4.app.FragmentTransaction fragmentTrans = fm.beginTransaction();
-                fragmentTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-                //getSupportFragmentManager().beginTransaction().replace(R.id.LayoutMain, testefragment).commit();
-                fragmentTrans.replace(R.id.linearLayoutDoTextViewDoFragment, testefragment);
-                fragmentTrans.addToBackStack("fragment");
-                alterarTelas();
+                bundle.putString("resposta", respDaImagem);
+
+                fragmentApurarResultado.setArguments(bundle);
                 oqSeraFalado = textoParaFragment;
                 vamosFalar();
-                fragmentTrans.commit();
+                alterarTelas();
+                getSupportFragmentManager().beginTransaction().replace(R.id.linearLayoutDoTextViewDoFragment, fragmentApurarResultado).addToBackStack("fragment").commit();
 
             }
         });
