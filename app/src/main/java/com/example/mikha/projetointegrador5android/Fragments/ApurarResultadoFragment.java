@@ -38,7 +38,7 @@ public class ApurarResultadoFragment extends Fragment {
         resposta = this.getArguments().getString("resposta");
         Log.v("resposta", resposta);
 
-        if (resposta.equals(palavraDigitada)){
+        if (resposta.equalsIgnoreCase(palavraDigitada)){
             resultadoPalavra.setText("Você acertou!!!!");
         }else{
             resultadoPalavra.setText("Você errou! =(");
