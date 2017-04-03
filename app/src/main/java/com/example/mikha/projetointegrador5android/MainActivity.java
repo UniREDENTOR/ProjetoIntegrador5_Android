@@ -7,15 +7,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.mikha.projetointegrador5android.Fragments.TesteFragment;
+import com.example.mikha.projetointegrador5android.Fragments.ApurarResultadoFragment;
 
 import java.util.Locale;
 
@@ -25,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     EditText editTextPrincipal;
     Button botaoDeFalar;
     String oqSeraFalado;
-    LinearLayout linearlayoutfragment;
-    LinearLayout linearlayoutfragmenttextview;
+    LinearLayout linearLayoutDoEditTextEButton;
+    LinearLayout linearLayoutDoTextViewDoFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         editTextPrincipal = (EditText) findViewById(R.id.EditTextEntrada);
         botaoDeFalar = (Button) findViewById(R.id.ButtonTextToSpeech);
-        linearlayoutfragment = (LinearLayout) findViewById(R.id.linearlayoutfragment);
-        linearlayoutfragmenttextview = (LinearLayout) findViewById(R.id.linearlayoutfragmenttextview);
+        linearLayoutDoEditTextEButton = (LinearLayout) findViewById(R.id.linearLayoutDoEditTextEButton);
+        linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -60,19 +58,18 @@ public class MainActivity extends AppCompatActivity {
                 Bundle bundle = new Bundle();
                 String textoParaFragment = editTextPrincipal.getText().toString();
                 bundle.putString("oqSeraFalado", textoParaFragment);
-                TesteFragment testefragment = new TesteFragment();
+                ApurarResultadoFragment testefragment = new ApurarResultadoFragment();
                 testefragment.setArguments(bundle);
                 FragmentManager fm = getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTrans = fm.beginTransaction();
                 fragmentTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 //getSupportFragmentManager().beginTransaction().replace(R.id.LayoutMain, testefragment).commit();
-                fragmentTrans.replace(R.id.linearlayoutfragmenttextview, testefragment);
+                fragmentTrans.replace(R.id.linearLayoutDoTextViewDoFragment, testefragment);
                 fragmentTrans.addToBackStack("fragment");
                 alterarTelas();
                 oqSeraFalado = textoParaFragment;
                 vamosFalar();
                 fragmentTrans.commit();
-
 
             }
         });
@@ -87,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
         }
         alterarTelas();
     }
-
 
     @Override
     public void onPause(){
@@ -117,11 +113,8 @@ public class MainActivity extends AppCompatActivity {
             }else{
                 vamosFalar();
             }
-
-
-            Log.e("count", count + "");
-            Log.e("before", before + "");
-
+//            Log.e("count", count + "");
+//            Log.e("before", before + "");
         }
 
         @Override
@@ -138,12 +131,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void alterarTelas(){
-        if (linearlayoutfragment.getVisibility() == View.VISIBLE){
-            linearlayoutfragment.setVisibility(View.INVISIBLE);
-            linearlayoutfragmenttextview.setVisibility(View.VISIBLE);
+        if (linearLayoutDoEditTextEButton.getVisibility() == View.VISIBLE){
+            linearLayoutDoEditTextEButton.setVisibility(View.INVISIBLE);
+            linearLayoutDoTextViewDoFragment.setVisibility(View.VISIBLE);
         }else{
-            linearlayoutfragment.setVisibility(View.VISIBLE);
-            linearlayoutfragmenttextview.setVisibility(View.INVISIBLE);
+            linearLayoutDoEditTextEButton.setVisibility(View.VISIBLE);
+            linearLayoutDoTextViewDoFragment.setVisibility(View.INVISIBLE);
         }
     }
 }
