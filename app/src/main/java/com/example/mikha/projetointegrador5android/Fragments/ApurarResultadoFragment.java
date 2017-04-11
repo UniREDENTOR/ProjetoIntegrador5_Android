@@ -32,19 +32,25 @@ public class ApurarResultadoFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_apurar_resultado, container, false);
         resultadoPalavra = (TextView) view.findViewById(R.id.TextViewTesteFragment);
-
         palavraDigitada = this.getArguments().getString("oqSeraFalado");
         Log.v("palavra", palavraDigitada);
         resposta = this.getArguments().getString("resposta");
         Log.v("resposta", resposta);
 
+        if(testeResultado()){
+            setLinearlayoutimagemdofragment(R.drawable.ic_menu_camera);
+        }
+        return view;
+    }
+
+    public boolean testeResultado() {
         if (resposta.equalsIgnoreCase(palavraDigitada)){
             resultadoPalavra.setText("Você acertou!!!!");
+            return true;
         }else{
             resultadoPalavra.setText("Você errou! =(");
+            return false;
         }
-
-        return view;
     }
 
 }

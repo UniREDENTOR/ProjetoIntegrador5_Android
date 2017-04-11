@@ -2,12 +2,16 @@ package com.example.mikha.projetointegrador5android;
 
 import android.app.FragmentTransaction;
 import android.speech.tts.TextToSpeech;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.NavUtils;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextToSpeech tts;
     EditText editTextPrincipal;
+
     Button botaoDeFalar;
     String oqSeraFalado;
     String respDaImagem;
@@ -31,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
     LinearLayout linearLayoutDoTextViewDoFragment;
     LinearLayout linearLayoutDaImagemDoFragment;
 
-    FragmentManager fm = getSupportFragmentManager();
-    android.support.v4.app.FragmentTransaction fragmentTrans = fm.beginTransaction();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +48,10 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
 
-        fragmentTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+
 
         final ImagemFragment imagemFrag = new ImagemFragment();
-        fragmentTrans.replace(R.id.linearlayoutimagem, imagemFrag).addToBackStack("fragment").commit();
+        chamarFragmento().replace(R.id.linearlayoutimagem, imagemFrag).addToBackStack("fragment").commit();
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -74,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 ApurarResultadoFragment fragmentApurarResultado = new ApurarResultadoFragment();
                 String textoParaFragment = editTextPrincipal.getText().toString();
 
-                respDaImagem = imagemFrag.respostaDaImagem;
+                respDaImagem = imagemFrag.getRespostaDaImagem();
 
                 bundle.putString("oqSeraFalado", textoParaFragment);
                 bundle.putString("resposta", respDaImagem);
@@ -83,10 +86,18 @@ public class MainActivity extends AppCompatActivity {
                 oqSeraFalado = textoParaFragment;
                 vamosFalar();
                 alterarTelas();
-                getSupportFragmentManager().beginTransaction().replace(R.id.linearLayoutDoTextViewDoFragment, fragmentApurarResultado).addToBackStack("fragment").commit();
+                chamarFragmento().replace(R.id.linearLayoutDoTextViewDoFragment, fragmentApurarResultado).addToBackStack("fragment").commit();
 
             }
         });
+    }
+
+    public android.support.v4.app.FragmentTransaction chamarFragmento(){
+        FragmentManager fm = getSupportFragmentManager();
+        android.support.v4.app.FragmentTransaction fragmentTrans = fm.beginTransaction();
+        fragmentTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+        return fragmentTrans;
+
     }
 
     @Override

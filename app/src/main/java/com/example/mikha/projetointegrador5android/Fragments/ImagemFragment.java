@@ -16,7 +16,7 @@ import com.example.mikha.projetointegrador5android.R;
 public class ImagemFragment extends Fragment {
 
     LinearLayout linearlayoutimagemdofragment;
-    public String respostaDaImagem;
+    private String respostaDaImagem;
 
 
     public ImagemFragment() {
@@ -36,7 +36,14 @@ public class ImagemFragment extends Fragment {
 
         return view;
 
+    }
 
+    public void setLinearlayoutimagemdofragment(int id){
+        linearlayoutimagemdofragment.setBackgroundResource(id);
+    }
+
+    public String getRespostaDaImagem(){
+        return this.respostaDaImagem;
     }
 
 }
