@@ -1,5 +1,4 @@
 package com.example.mikha.projetointegrador5android;
-
 import android.app.FragmentTransaction;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
@@ -17,20 +16,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import com.example.mikha.projetointegrador5android.Fragments.ApurarResultadoFragment;
 import com.example.mikha.projetointegrador5android.Fragments.ImagemFragment;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ImagemFragment.OnItemClickedListener {
 
     TextToSpeech tts;
     EditText editTextPrincipal;
 
     Button botaoDeFalar;
     String oqSeraFalado;
-    String respDaImagem;
 
     LinearLayout linearLayoutDoEditTextEButton;
     LinearLayout linearLayoutDoTextViewDoFragment;
@@ -48,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
 
-
-
-        final ImagemFragment imagemFrag = new ImagemFragment();
-        chamarFragmento().replace(R.id.linearlayoutimagem, imagemFrag).addToBackStack("fragment").commit();
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -77,11 +73,8 @@ public class MainActivity extends AppCompatActivity {
                 ApurarResultadoFragment fragmentApurarResultado = new ApurarResultadoFragment();
                 String textoParaFragment = editTextPrincipal.getText().toString();
 
-                respDaImagem = imagemFrag.getRespostaDaImagem();
-
                 bundle.putString("oqSeraFalado", textoParaFragment);
-                bundle.putString("resposta", respDaImagem);
-
+//                bundle.putString("resposta", <fragmento>.getRespostaDaImagem());
                 fragmentApurarResultado.setArguments(bundle);
                 oqSeraFalado = textoParaFragment;
                 vamosFalar();
@@ -90,7 +83,47 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+
     }
+
+    @Override
+    public void OnItemClicked(String resposta) {
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.itensdomenu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        ImagemFragment imagemFrag = new ImagemFragment();
+        switch (item.getItemId()) {
+            case R.id.categoria1:
+                Bundle catID = new Bundle();
+                catID.putInt("catID",item.getItemId());
+                imagemFrag.setArguments(catID);
+                chamarFragmento().replace(R.id.linearlayoutimagem, imagemFrag).addToBackStack("fragment").commit();
+                return true;
+//            case R.id.help:
+//                showHelp();
+//                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+
+    public void setLinearLayoutDaImagemDoFragment(int background) {
+        LinearLayout linearimagem = this.linearLayoutDaImagemDoFragment;
+        linearimagem.setBackgroundResource(background);
+    }
+
 
     public android.support.v4.app.FragmentTransaction chamarFragmento(){
         FragmentManager fm = getSupportFragmentManager();

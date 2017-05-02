@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.example.mikha.projetointegrador5android.MainActivity;
 import com.example.mikha.projetointegrador5android.R;
 
 /**
@@ -16,8 +17,9 @@ import com.example.mikha.projetointegrador5android.R;
 public class ImagemFragment extends Fragment {
 
     LinearLayout linearlayoutimagemdofragment;
-    private String respostaDaImagem;
-
+    String respostaDaImagem;
+    int catID;
+    OnItemClickedListener mListener;
 
     public ImagemFragment() {
         // Required empty public constructor
@@ -30,13 +32,26 @@ public class ImagemFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_imagem, container, false);
         linearlayoutimagemdofragment = (LinearLayout) view.findViewById(R.id.linearlayoutimagemdofragment);
-        linearlayoutimagemdofragment.setBackgroundResource(R.drawable.ic_android_black_24dp);
-        respostaDaImagem = "oi";
-
+        catID = this.getArguments().getInt("catID");
+        escolherCategoria();
 
         return view;
 
     }
+
+    public interface OnItemClickedListener {
+        public void OnItemClicked(String resposta);
+    }
+
+    public void escolherCategoria(){
+        switch (catID){
+            case R.id.categoria1:
+                linearlayoutimagemdofragment.setBackgroundResource(R.drawable.ic_android_black_24dp);
+                setRespostaDaImagem("oi");
+
+        }
+    }
+
 
     public void setLinearlayoutimagemdofragment(int id){
         linearlayoutimagemdofragment.setBackgroundResource(id);
@@ -45,5 +60,11 @@ public class ImagemFragment extends Fragment {
     public String getRespostaDaImagem(){
         return this.respostaDaImagem;
     }
+
+    public void setRespostaDaImagem(String respostaDaImagem) {
+        this.respostaDaImagem = respostaDaImagem;
+    }
+
+
 
 }

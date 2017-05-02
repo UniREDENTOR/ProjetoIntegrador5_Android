@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.mikha.projetointegrador5android.MainActivity;
 import com.example.mikha.projetointegrador5android.R;
 
 /**
@@ -19,6 +20,7 @@ public class ApurarResultadoFragment extends Fragment {
     private TextView resultadoPalavra;
     String palavraDigitada;
     String resposta;
+    MainActivity mActivity= new MainActivity();
 
 
     public ApurarResultadoFragment() {
@@ -33,22 +35,19 @@ public class ApurarResultadoFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_apurar_resultado, container, false);
         resultadoPalavra = (TextView) view.findViewById(R.id.TextViewTesteFragment);
         palavraDigitada = this.getArguments().getString("oqSeraFalado");
-        Log.v("palavra", palavraDigitada);
         resposta = this.getArguments().getString("resposta");
-        Log.v("resposta", resposta);
 
         if(testeResultado()){
-            setLinearlayoutimagemdofragment(R.drawable.ic_menu_camera);
+            mActivity.setLinearLayoutDaImagemDoFragment(R.drawable.ic_menu_camera);
         }
         return view;
     }
 
     public boolean testeResultado() {
         if (resposta.equalsIgnoreCase(palavraDigitada)){
-            resultadoPalavra.setText("Você acertou!!!!");
             return true;
         }else{
-            resultadoPalavra.setText("Você errou! =(");
+            resultadoPalavra.setText("Você errou! ");
             return false;
         }
     }
