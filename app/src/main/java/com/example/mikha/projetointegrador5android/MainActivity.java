@@ -1,4 +1,5 @@
 package com.example.mikha.projetointegrador5android;
+
 import android.app.FragmentTransaction;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.app.Fragment;
@@ -24,7 +25,9 @@ import com.example.mikha.projetointegrador5android.Fragments.ImagemFragment;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements ImagemFragment.OnItemClickedListener {
+public class MainActivity extends AppCompatActivity{
+
+    PegarRespostaDaImagem callback;
 
     TextToSpeech tts;
     EditText editTextPrincipal;
@@ -48,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements ImagemFragment.On
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
 
-
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
@@ -68,10 +70,12 @@ public class MainActivity extends AppCompatActivity implements ImagemFragment.On
         botaoDeFalar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Bundle bundle = new Bundle();
                 ApurarResultadoFragment fragmentApurarResultado = new ApurarResultadoFragment();
                 String textoParaFragment = editTextPrincipal.getText().toString();
+
+                String resposta = callback.pegarResposta();
+                Log.v("resposta", resposta);
 
                 bundle.putString("oqSeraFalado", textoParaFragment);
 //                bundle.putString("resposta", <fragmento>.getRespostaDaImagem());
@@ -83,13 +87,6 @@ public class MainActivity extends AppCompatActivity implements ImagemFragment.On
 
             }
         });
-
-
-    }
-
-    @Override
-    public void OnItemClicked(String resposta) {
-
 
     }
 
@@ -103,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements ImagemFragment.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         ImagemFragment imagemFrag = new ImagemFragment();
+        callback = imagemFrag;
         switch (item.getItemId()) {
             case R.id.categoria1:
                 Bundle catID = new Bundle();
@@ -197,4 +195,9 @@ public class MainActivity extends AppCompatActivity implements ImagemFragment.On
             linearLayoutDoTextViewDoFragment.setVisibility(View.INVISIBLE);
         }
     }
+
+    public interface PegarRespostaDaImagem {
+        String pegarResposta();
+    }
+
 }

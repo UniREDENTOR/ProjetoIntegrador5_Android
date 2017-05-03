@@ -14,12 +14,12 @@ import com.example.mikha.projetointegrador5android.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ImagemFragment extends Fragment {
+public class ImagemFragment extends Fragment implements MainActivity.PegarRespostaDaImagem{
+
 
     LinearLayout linearlayoutimagemdofragment;
     String respostaDaImagem;
     int catID;
-    OnItemClickedListener mListener;
 
     public ImagemFragment() {
         // Required empty public constructor
@@ -36,12 +36,8 @@ public class ImagemFragment extends Fragment {
         escolherCategoria();
 
         return view;
-
     }
 
-    public interface OnItemClickedListener {
-        public void OnItemClicked(String resposta);
-    }
 
     public void escolherCategoria(){
         switch (catID){
@@ -65,6 +61,8 @@ public class ImagemFragment extends Fragment {
         this.respostaDaImagem = respostaDaImagem;
     }
 
-
-
+    @Override
+    public String pegarResposta() {
+        return this.respostaDaImagem;
+    }
 }

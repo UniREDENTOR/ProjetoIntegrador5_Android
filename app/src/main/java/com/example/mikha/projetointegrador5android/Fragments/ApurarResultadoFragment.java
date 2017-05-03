@@ -20,7 +20,7 @@ public class ApurarResultadoFragment extends Fragment {
     private TextView resultadoPalavra;
     String palavraDigitada;
     String resposta;
-    MainActivity mActivity= new MainActivity();
+    MainActivity mActivity = new MainActivity();
 
 
     public ApurarResultadoFragment() {
@@ -51,5 +51,4 @@ public class ApurarResultadoFragment extends Fragment {
             return false;
         }
     }
-
 }
