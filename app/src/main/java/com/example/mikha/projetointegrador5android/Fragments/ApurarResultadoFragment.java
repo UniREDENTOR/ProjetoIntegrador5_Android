@@ -15,18 +15,16 @@ import com.example.mikha.projetointegrador5android.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ApurarResultadoFragment extends Fragment {
+public class ApurarResultadoFragment extends Fragment implements ImagemFragment.RespostaCorreta{
 
     private TextView resultadoPalavra;
     String palavraDigitada;
     String resposta;
-    MainActivity mActivity = new MainActivity();
-
+    public boolean aRespostaEstaCorreta;
 
     public ApurarResultadoFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,17 +36,26 @@ public class ApurarResultadoFragment extends Fragment {
         resposta = this.getArguments().getString("resposta");
 
         if(testeResultado()){
-            mActivity.setLinearLayoutDaImagemDoFragment(R.drawable.ic_menu_camera);
+            resultadoPalavra.setText("Você acertou! Pressione na tela para continuar");
+            aRespostaEstaCorreta = true;
+        }else{
+            aRespostaEstaCorreta = false;
         }
         return view;
     }
+
+
 
     public boolean testeResultado() {
         if (resposta.equalsIgnoreCase(palavraDigitada)){
             return true;
         }else{
-            resultadoPalavra.setText("Você errou! ");
             return false;
         }
+    }
+
+    @Override
+    public boolean verificarAresposta() {
+        return this.aRespostaEstaCorreta;
     }
 }

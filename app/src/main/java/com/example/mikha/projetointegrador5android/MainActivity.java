@@ -12,6 +12,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +29,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity{
 
     PegarRespostaDaImagem callback;
+    public ApurarResultadoFragment fragmentApurarResultado = new ApurarResultadoFragment();
 
     TextToSpeech tts;
     EditText editTextPrincipal;
@@ -71,14 +73,10 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                ApurarResultadoFragment fragmentApurarResultado = new ApurarResultadoFragment();
                 String textoParaFragment = editTextPrincipal.getText().toString();
-
                 String resposta = callback.pegarResposta();
-                Log.v("resposta", resposta);
-
                 bundle.putString("oqSeraFalado", textoParaFragment);
-//                bundle.putString("resposta", <fragmento>.getRespostaDaImagem());
+                bundle.putString("resposta", resposta);
                 fragmentApurarResultado.setArguments(bundle);
                 oqSeraFalado = textoParaFragment;
                 vamosFalar();
@@ -198,6 +196,7 @@ public class MainActivity extends AppCompatActivity{
 
     public interface PegarRespostaDaImagem {
         String pegarResposta();
+
     }
 
 }
