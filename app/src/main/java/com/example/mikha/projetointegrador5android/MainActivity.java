@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity{
     TextToSpeech tts;
     EditText editTextPrincipal;
 
+    boolean oBotaoFoiApertado;
+
     Button botaoDeFalar;
     String oqSeraFalado;
 
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity{
         linearLayoutDoEditTextEButton = (LinearLayout) findViewById(R.id.linearLayoutDoEditTextEButton);
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
+        oBotaoFoiApertado = false;
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -72,20 +75,28 @@ public class MainActivity extends AppCompatActivity{
         botaoDeFalar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                oBotaoFoiApertado = true;
                 Bundle bundle = new Bundle();
                 String textoParaFragment = editTextPrincipal.getText().toString();
                 String resposta = callback.pegarResposta();
                 bundle.putString("oqSeraFalado", textoParaFragment);
                 bundle.putString("resposta", resposta);
+
+                fragmentApurarResultado = new ApurarResultadoFragment();
+
                 fragmentApurarResultado.setArguments(bundle);
                 oqSeraFalado = textoParaFragment;
                 vamosFalar();
                 alterarTelas();
-                chamarFragmento().replace(R.id.linearLayoutDoTextViewDoFragment, fragmentApurarResultado).addToBackStack("fragment").commit();
+                chamarFragmento().add(R.id.linearLayoutDoTextViewDoFragment, fragmentApurarResultado).addToBackStack("fragment").commit();
 
             }
         });
 
+    }
+
+    public boolean isoBotaoFoiApertado() {
+        return this.oBotaoFoiApertado;
     }
 
     @Override
@@ -104,7 +115,7 @@ public class MainActivity extends AppCompatActivity{
                 Bundle catID = new Bundle();
                 catID.putInt("catID",item.getItemId());
                 imagemFrag.setArguments(catID);
-                chamarFragmento().replace(R.id.linearlayoutimagem, imagemFrag).addToBackStack("fragment").commit();
+                chamarFragmento().add(R.id.linearlayoutimagem, imagemFrag).addToBackStack("fragment").commit();
                 return true;
 //            case R.id.help:
 //                showHelp();
@@ -131,6 +142,7 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed(){
+        Log.v("voltar frag",""+ getFragmentManager().getBackStackEntryCount());
         if(getFragmentManager().getBackStackEntryCount() > 0 ){
             getFragmentManager().popBackStack();
         }else{

@@ -69,6 +69,15 @@ public class ImagemFragment extends Fragment implements MainActivity.PegarRespos
                 for(i = 0; i < respostas.length; i++){
                     setLinearlayoutimagemdofragment(imagens[i]);
                     setRespostaDaImagem(respostas[i]);
+
+                    if (mainActivity.isoBotaoFoiApertado()){
+                        if (!verificaçao()){
+                            Toast.makeText(getContext(), "resposta errada!!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+
                     //Esperar o retorno da variável "aRespostaEstaCorreta" contida no fragmento "ApurarResultadoFragment"
                     //o callback para pegar esta varíavel está funcionando, o problema é que preciso de um gatilho que pegará
                     //a variável desejada apenas quando a verificação da resposta (que é feita dentro do fragmento "ApurarResultadoFragment")

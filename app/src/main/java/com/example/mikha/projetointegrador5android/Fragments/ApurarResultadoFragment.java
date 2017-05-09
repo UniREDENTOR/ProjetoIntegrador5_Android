@@ -34,6 +34,7 @@ public class ApurarResultadoFragment extends Fragment implements ImagemFragment.
         resultadoPalavra = (TextView) view.findViewById(R.id.TextViewTesteFragment);
         palavraDigitada = this.getArguments().getString("oqSeraFalado");
         resposta = this.getArguments().getString("resposta");
+        aRespostaEstaCorreta = false;
 
         if(testeResultado()){
             resultadoPalavra.setText("Você acertou! Pressione na tela para continuar");
