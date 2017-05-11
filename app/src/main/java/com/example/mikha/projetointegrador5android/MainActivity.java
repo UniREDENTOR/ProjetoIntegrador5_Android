@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity{
     EditText editTextPrincipal;
 
     int contador;
-    int contadorAnterior;
 
     Button botaoDeFalar;
     Button botaoDeMudarImagem;
@@ -58,7 +57,6 @@ public class MainActivity extends AppCompatActivity{
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
         contador = 0;
-        contadorAnterior = 0;
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -80,9 +78,15 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 if (botaoDeMudarImagem.getText().equals("Avançar")) {
-                    linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagens(contador));
-                    resposta = classeArrays.getRespostas(contador);
-                    contadorAnterior++;
+                    if (contador+1 <= classeArrays.checarTamanhoArray()){
+                        Log.v("contador: ",""+contador);
+                        Log.v("tamanho do array: ",""+classeArrays.checarTamanhoArray());
+                        linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagens(contador));
+                        resposta = classeArrays.getRespostas(contador);
+                    }else{
+                        alterarTelas();
+                        resultadoPalavra.setText("Fim do jogo! :D");
+                    }
                 }
                 alterarTelas();
             }
@@ -96,16 +100,16 @@ public class MainActivity extends AppCompatActivity{
                 vamosFalar();
                 alterarTelas();
                 if (testeResultado()) {
-                    resultadoPalavra.setText("Você acertou! Pressione na tela para continuar");
+                    resultadoPalavra.setText("Você acertou! Pressione o botão para continuar");
                     contador++;
                     botaoDeMudarImagem.setText("Avançar");
                 } else {
                     resultadoPalavra.setText("Você errou, tente novamente");
                     botaoDeMudarImagem.setText("voltar");
                 }
+                editTextPrincipal.getText().clear();
             }
         });
-
     }
 
     public boolean testeResultado() {
@@ -134,13 +138,6 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    public android.support.v4.app.FragmentTransaction chamarFragmento(){
-        FragmentManager fm = getSupportFragmentManager();
-        android.support.v4.app.FragmentTransaction fragmentTrans = fm.beginTransaction();
-        fragmentTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-        return fragmentTrans;
-    }
-
     @Override
     public void onBackPressed(){
         if (queTelaEstamos == 1) {
@@ -167,9 +164,7 @@ public class MainActivity extends AppCompatActivity{
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             oqSeraFalado = editTextPrincipal.getText().toString();
             if (oqSeraFalado.length() >= 1){
-                if(count < before){
-                    Toast.makeText(getApplicationContext(), "Letra apagada", Toast.LENGTH_SHORT).show();
-                }else{
+                if(count >= before){
                     oqSeraFalado = oqSeraFalado.substring(oqSeraFalado.length()-1);
                     vamosFalar();
                 }

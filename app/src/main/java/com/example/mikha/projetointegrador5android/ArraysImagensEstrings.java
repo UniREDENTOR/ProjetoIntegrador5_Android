@@ -21,4 +21,8 @@ class ArraysImagensEstrings {
     public String getRespostas(int count) {
         return respostas[count];
     }
+
+    public int checarTamanhoArray(){
+        return imagens.length;
+    }
 }
