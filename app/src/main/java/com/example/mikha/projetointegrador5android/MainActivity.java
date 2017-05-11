@@ -2,42 +2,43 @@ package com.example.mikha.projetointegrador5android;
 
 import android.app.FragmentTransaction;
 import android.speech.tts.TextToSpeech;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuInflater;
-
-import com.example.mikha.projetointegrador5android.Fragments.ApurarResultadoFragment;
-import com.example.mikha.projetointegrador5android.Fragments.ImagemFragment;
 
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
 
-    PegarRespostaDaImagem callback;
-    public ApurarResultadoFragment fragmentApurarResultado = new ApurarResultadoFragment();
+    ArraysImagensEstrings classeArrays = new ArraysImagensEstrings();
 
     TextToSpeech tts;
     EditText editTextPrincipal;
 
-    boolean oBotaoFoiApertado;
+    int contador;
+    int contadorAnterior;
 
     Button botaoDeFalar;
+    Button botaoDeMudarImagem;
+
     String oqSeraFalado;
+    String resposta;
+
+    TextView resultadoPalavra;
+
+    int queTelaEstamos;
 
     LinearLayout linearLayoutDoEditTextEButton;
     LinearLayout linearLayoutDoTextViewDoFragment;
@@ -50,11 +51,14 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         editTextPrincipal = (EditText) findViewById(R.id.EditTextEntrada);
         botaoDeFalar = (Button) findViewById(R.id.ButtonTextToSpeech);
+        botaoDeMudarImagem = (Button) findViewById(R.id.ButtonTextView);
+        resultadoPalavra = (TextView) findViewById(R.id.TextViewTesteFragment);
         linearLayoutDaImagemDoFragment = (LinearLayout) findViewById(R.id.linearlayoutimagem);
         linearLayoutDoEditTextEButton = (LinearLayout) findViewById(R.id.linearLayoutDoEditTextEButton);
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
-        oBotaoFoiApertado = false;
+        contador = 0;
+        contadorAnterior = 0;
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -72,31 +76,40 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
+        botaoDeMudarImagem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (botaoDeMudarImagem.getText().equals("Avançar")) {
+                    linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagens(contador));
+                    resposta = classeArrays.getRespostas(contador);
+                    contadorAnterior++;
+                }
+                alterarTelas();
+            }
+        });
+
         botaoDeFalar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                oBotaoFoiApertado = true;
-                Bundle bundle = new Bundle();
-                String textoParaFragment = editTextPrincipal.getText().toString();
-                String resposta = callback.pegarResposta();
-                bundle.putString("oqSeraFalado", textoParaFragment);
-                bundle.putString("resposta", resposta);
 
-                fragmentApurarResultado = new ApurarResultadoFragment();
-
-                fragmentApurarResultado.setArguments(bundle);
-                oqSeraFalado = textoParaFragment;
+                oqSeraFalado = editTextPrincipal.getText().toString();
                 vamosFalar();
                 alterarTelas();
-                chamarFragmento().add(R.id.linearLayoutDoTextViewDoFragment, fragmentApurarResultado).addToBackStack("fragment").commit();
-
+                if (testeResultado()) {
+                    resultadoPalavra.setText("Você acertou! Pressione na tela para continuar");
+                    contador++;
+                    botaoDeMudarImagem.setText("Avançar");
+                } else {
+                    resultadoPalavra.setText("Você errou, tente novamente");
+                    botaoDeMudarImagem.setText("voltar");
+                }
             }
         });
 
     }
 
-    public boolean isoBotaoFoiApertado() {
-        return this.oBotaoFoiApertado;
+    public boolean testeResultado() {
+        return resposta.equalsIgnoreCase(oqSeraFalado);
     }
 
     @Override
@@ -108,14 +121,10 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        ImagemFragment imagemFrag = new ImagemFragment();
-        callback = imagemFrag;
         switch (item.getItemId()) {
             case R.id.categoria1:
-                Bundle catID = new Bundle();
-                catID.putInt("catID",item.getItemId());
-                imagemFrag.setArguments(catID);
-                chamarFragmento().add(R.id.linearlayoutimagem, imagemFrag).addToBackStack("fragment").commit();
+                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagens(contador));
+                resposta = classeArrays.getRespostas(contador);
                 return true;
 //            case R.id.help:
 //                showHelp();
@@ -125,30 +134,19 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-
-    public void setLinearLayoutDaImagemDoFragment(int background) {
-        LinearLayout linearimagem = this.linearLayoutDaImagemDoFragment;
-        linearimagem.setBackgroundResource(background);
-    }
-
-
     public android.support.v4.app.FragmentTransaction chamarFragmento(){
         FragmentManager fm = getSupportFragmentManager();
         android.support.v4.app.FragmentTransaction fragmentTrans = fm.beginTransaction();
         fragmentTrans.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         return fragmentTrans;
-
     }
 
     @Override
     public void onBackPressed(){
-        Log.v("voltar frag",""+ getFragmentManager().getBackStackEntryCount());
-        if(getFragmentManager().getBackStackEntryCount() > 0 ){
-            getFragmentManager().popBackStack();
-        }else{
-            super.onBackPressed();
+        if (queTelaEstamos == 1) {
+            alterarTelas();
         }
-        alterarTelas();
+        super.onBackPressed();
     }
 
     @Override
@@ -175,17 +173,12 @@ public class MainActivity extends AppCompatActivity{
                     oqSeraFalado = oqSeraFalado.substring(oqSeraFalado.length()-1);
                     vamosFalar();
                 }
-
             }else{
                 vamosFalar();
             }
-//            Log.e("count", count + "");
-//            Log.e("before", before + "");
         }
-
         @Override
         public void afterTextChanged(Editable s) {
-
         }
     };
 
@@ -200,15 +193,12 @@ public class MainActivity extends AppCompatActivity{
         if (linearLayoutDoEditTextEButton.getVisibility() == View.VISIBLE){
             linearLayoutDoEditTextEButton.setVisibility(View.INVISIBLE);
             linearLayoutDoTextViewDoFragment.setVisibility(View.VISIBLE);
+            queTelaEstamos = 1;
         }else{
             linearLayoutDoEditTextEButton.setVisibility(View.VISIBLE);
             linearLayoutDoTextViewDoFragment.setVisibility(View.INVISIBLE);
+            queTelaEstamos = 2;
         }
-    }
-
-    public interface PegarRespostaDaImagem {
-        String pegarResposta();
-
     }
 
 }
