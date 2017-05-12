@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity{
                         Log.v("tamanho do array: ",""+classeArrays.checarTamanhoArray());
                         linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagens(contador));
                         resposta = classeArrays.getRespostas(contador);
+                        editTextPrincipal.getText().clear();
                     }else{
                         alterarTelas();
                         resultadoPalavra.setText("Fim do jogo! :D");
@@ -107,7 +108,6 @@ public class MainActivity extends AppCompatActivity{
                     resultadoPalavra.setText("Você errou, tente novamente");
                     botaoDeMudarImagem.setText("voltar");
                 }
-                editTextPrincipal.getText().clear();
             }
         });
     }
