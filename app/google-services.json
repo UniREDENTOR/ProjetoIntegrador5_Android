@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "758233222145",
+    "firebase_url": "https://audiobook-pi5.firebaseio.com",
+    "project_id": "audiobook-pi5",
+    "storage_bucket": "audiobook-pi5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:758233222145:android:68ee31d45753055a",
+        "android_client_info": {
+          "package_name": "com.example.mikha.projetointegrador5android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "758233222145-k9jv37ad6jij5i9pl3ga139via4o1om2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-t9N8T05SDBGomCFh4Hdclg_AmfED-sQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
