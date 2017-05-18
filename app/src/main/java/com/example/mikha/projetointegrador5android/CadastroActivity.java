@@ -75,10 +75,13 @@ public class CadastroActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     Toast.makeText(CadastroActivity.this, "SUCESSO.", Toast.LENGTH_SHORT).show();
+                    user.saveDB();
                     finish();
                 }else{
                     Toast.makeText(CadastroActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
     }
