@@ -168,12 +168,14 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(cadastroActivity);
                 return true;
             case R.id.categoria3login:
-                Intent LoginActivity = new Intent(this, LoginActivity.class);
-                startActivity(LoginActivity);
+                Intent loginActivity = new Intent(this, LoginActivity.class);
+                startActivity(loginActivity);
                 return true;
-//            case R.id.help:
-//                showHelp();
-//                return true;
+            case R.id.categoria4pontuacao:
+                Intent pontuacao = new Intent(this, PontuacaoUserActivity.class);
+                pontuacao.putExtra("pontos", contador);
+                startActivity(pontuacao);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
