@@ -6,4 +6,13 @@
         android:id="@+id/categoria1"
         android:title="Objetos"
         app:showAsAction="withText" />
+    <item
+        android:id="@+id/categoria2cadastro"
+        android:title="cadastrar"
+        app:showAsAction="withText" />
+    <item
+        android:id="@+id/categoria3login"
+        android:title="Login"
+        app:showAsAction="withText" />
+
 </menu>

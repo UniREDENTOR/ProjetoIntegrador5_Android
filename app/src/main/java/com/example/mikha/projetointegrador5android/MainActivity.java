@@ -1,13 +1,16 @@
 package com.example.mikha.projetointegrador5android;
 
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.speech.tts.TextToSpeech;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuInflater;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Locale;
 
@@ -39,9 +45,14 @@ public class MainActivity extends AppCompatActivity{
 
     int queTelaEstamos;
 
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     LinearLayout linearLayoutDoEditTextEButton;
     LinearLayout linearLayoutDoTextViewDoFragment;
     LinearLayout linearLayoutDaImagemDoFragment;
+
+    FirebaseAuth firebaseAuth;
+    FirebaseUser user;
 
 
     @Override
@@ -56,7 +67,22 @@ public class MainActivity extends AppCompatActivity{
         linearLayoutDoEditTextEButton = (LinearLayout) findViewById(R.id.linearLayoutDoEditTextEButton);
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
         final Locale localeBR = new Locale("pt","BR");
+        firebaseAuth = firebaseAuth.getInstance();
         contador = 0;
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    Log.d("tag", "onAuthStateChanged:signed_in:" + user.getUid());
+                    editTextPrincipal.setHint(user.getEmail());
+                } else {
+                    Log.d("tag", "onAuthStateChanged:signed_out");
+                }
+            }
+        };
 
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
@@ -110,6 +136,13 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        firebaseAuth.addAuthStateListener(mAuthListener);
     }
 
     public boolean testeResultado() {
@@ -129,6 +162,14 @@ public class MainActivity extends AppCompatActivity{
             case R.id.categoria1:
                 linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagens(contador));
                 resposta = classeArrays.getRespostas(contador);
+                return true;
+            case R.id.categoria2cadastro:
+                Intent cadastroActivity = new Intent(this, CadastroActivity.class);
+                startActivity(cadastroActivity);
+                return true;
+            case R.id.categoria3login:
+                Intent LoginActivity = new Intent(this, LoginActivity.class);
+                startActivity(LoginActivity);
                 return true;
 //            case R.id.help:
 //                showHelp();
