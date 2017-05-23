@@ -23,6 +23,8 @@ import android.view.MenuInflater;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Locale;
 
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
     LinearLayout linearLayoutDaImagemDoFragment;
 
     FirebaseAuth firebaseAuth;
-    FirebaseUser user;
+    DatabaseReference databaseRef;
 
 
     @Override
@@ -73,7 +75,6 @@ public class MainActivity extends AppCompatActivity{
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d("tag", "onAuthStateChanged:signed_in:" + user.getUid());
@@ -129,6 +130,10 @@ public class MainActivity extends AppCompatActivity{
                 if (testeResultado()) {
                     resultadoPalavra.setText("Você acertou! Pressione o botão para continuar");
                     contador++;
+                    String pontuaçao = String.valueOf(contador);
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    databaseRef = FirebaseDatabase.getInstance().getReference();
+                    databaseRef.child(user.getUid()).child("pontuacao").setValue(pontuaçao);
                     botaoDeMudarImagem.setText("Avançar");
                 } else {
                     resultadoPalavra.setText("Você errou, tente novamente");
