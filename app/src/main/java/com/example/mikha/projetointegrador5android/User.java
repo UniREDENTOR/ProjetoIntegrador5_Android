@@ -1,8 +1,15 @@
 package com.example.mikha.projetointegrador5android;
+import android.util.Log;
+
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
+
+import java.util.Map;
 
 @IgnoreExtraProperties
 public class User {
@@ -11,7 +18,8 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private FirebaseAuth mAuth;
+    private Firebase firebase;
+    private Firebase firebaseChild;
 
     public User() {}
 
@@ -53,13 +61,8 @@ public class User {
         this.password = password;
     }
 
-    public void saveDB(){
-        Firebase firebase = FirebaseTest.getFirebase();
-        firebase = firebase.child("users").child(getId());
-        setPassword(null);
-        setid(null);
-        firebase.setValue(this);
-    }
+
+
 
 
 }

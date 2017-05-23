@@ -7,7 +7,7 @@ public class FirebaseTest {
 
     public static Firebase getFirebase(){
         if( firebase == null ){
-            firebase = new Firebase("https://audiobook-pi5.firebaseio.com");
+            firebase = new Firebase("https://audiobook-pi5.firebaseio.com/");
         }
         return( firebase );
     }
