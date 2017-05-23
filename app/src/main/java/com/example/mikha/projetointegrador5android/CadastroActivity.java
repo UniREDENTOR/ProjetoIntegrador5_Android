@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
 import java.util.Map;
 
 public class CadastroActivity extends AppCompatActivity {
@@ -39,7 +38,6 @@ public class CadastroActivity extends AppCompatActivity {
     BootstrapButton botaoAutoFill;
 
     private FirebaseAuth mAuth;
-
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseRef;
 
@@ -68,7 +66,7 @@ public class CadastroActivity extends AppCompatActivity {
             public void onClick(View v) {
                 nomeDoUsuario.setText("mika");
                 senhaDoUsuario.setText("0803890");
-                emailDoUsuario.setText("mikhaelipcn@gmail.com");
+                emailDoUsuario.setText("mikhael.pc@hotmail.com");
             }
         });
     }
@@ -87,6 +85,7 @@ public class CadastroActivity extends AppCompatActivity {
         user.setUsername(nomeDoUsuario.getText().toString() );
         user.setPassword(senhaDoUsuario.getText().toString() );
         user.setEmail(emailDoUsuario.getText().toString() );
+        user.setPontuacao("0");
         if (TextUtils.isEmpty(nomeDoUsuario.getText().toString())){
             //Nome is empty
             Toast.makeText(CadastroActivity.this, "Nome vazio", Toast.LENGTH_SHORT).show();
@@ -116,8 +115,6 @@ public class CadastroActivity extends AppCompatActivity {
                 }else{
                     Toast.makeText(CadastroActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
     }
