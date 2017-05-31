@@ -1,5 +1,6 @@
 package com.example.mikha.projetointegrador5android;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,7 +44,8 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w("tag", "signInWithEmail:failed", task.getException());
                             Toast.makeText(LoginActivity.this, "falhou", Toast.LENGTH_SHORT).show();
                         }else{
-                            finish();
+                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
                         }
                     }
                 });
