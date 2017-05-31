@@ -1,23 +1,23 @@
 package com.example.mikha.projetointegrador5android;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     ArraysImagensEstrings classeArrays = new ArraysImagensEstrings();
 
@@ -55,12 +55,13 @@ public class MainActivity extends AppCompatActivity{
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseRef;
-
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         editTextPrincipal = (EditText) findViewById(R.id.EditTextEntrada);
         botaoDeFalar = (Button) findViewById(R.id.ButtonTextToSpeech);
         botaoDeMudarImagem = (Button) findViewById(R.id.ButtonTextView);
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity{
         linearLayoutDaImagemDoFragment = (LinearLayout) findViewById(R.id.linearlayoutimagem);
         linearLayoutDoEditTextEButton = (LinearLayout) findViewById(R.id.linearLayoutDoEditTextEButton);
         linearLayoutDoTextViewDoFragment = (LinearLayout) findViewById(R.id.linearLayoutDoTextViewDoFragment);
+
         final Locale localeBR = new Locale("pt","BR");
         firebaseAuth = firebaseAuth.getInstance();
         contador = 0;
@@ -248,5 +250,4 @@ public class MainActivity extends AppCompatActivity{
             queTelaEstamos = 2;
         }
     }
-
 }
