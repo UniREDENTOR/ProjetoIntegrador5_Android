@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity{
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
+                if(status == TextToSpeech.SUCCESS){
                     tts.setLanguage(localeBR);
                 }
             }
@@ -123,7 +123,6 @@ public class MainActivity extends AppCompatActivity{
         botaoDeFalar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 oqSeraFalado = editTextPrincipal.getText().toString();
                 vamosFalar();
                 alterarTelas();
@@ -194,13 +193,19 @@ public class MainActivity extends AppCompatActivity{
         super.onBackPressed();
     }
 
+//    @Override
+//    public void onStop(){
+//        if(tts != null){
+//            tts.stop();
+//            tts.shutdown();
+//        }
+//        super.onStop();
+//    }
+
     @Override
-    public void onPause(){
-        if(tts != null){
-            tts.stop();
-            tts.shutdown();
-        }
-        super.onPause();
+    protected void onDestroy() {
+        tts.shutdown();
+        super.onDestroy();
     }
 
     TextWatcher textWatcher = new TextWatcher() {
