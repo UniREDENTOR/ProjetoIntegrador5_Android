@@ -23,6 +23,8 @@ import android.view.MenuInflater;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Locale;
 
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
     LinearLayout linearLayoutDaImagemDoFragment;
 
     FirebaseAuth firebaseAuth;
-    FirebaseUser user;
+    DatabaseReference databaseRef;
 
 
     @Override
@@ -73,7 +75,6 @@ public class MainActivity extends AppCompatActivity{
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     Log.d("tag", "onAuthStateChanged:signed_in:" + user.getUid());
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity{
         tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
             @Override
             public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
+                if(status == TextToSpeech.SUCCESS){
                     tts.setLanguage(localeBR);
                 }
             }
@@ -122,13 +123,16 @@ public class MainActivity extends AppCompatActivity{
         botaoDeFalar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 oqSeraFalado = editTextPrincipal.getText().toString();
                 vamosFalar();
                 alterarTelas();
                 if (testeResultado()) {
                     resultadoPalavra.setText("Você acertou! Pressione o botão para continuar");
                     contador++;
+                    String pontuaçao = String.valueOf(contador);
+                    FirebaseUser user = firebaseAuth.getCurrentUser();
+                    databaseRef = FirebaseDatabase.getInstance().getReference();
+                    databaseRef.child(user.getUid()).child("pontuacao").setValue(pontuaçao);
                     botaoDeMudarImagem.setText("Avançar");
                 } else {
                     resultadoPalavra.setText("Você errou, tente novamente");
@@ -168,12 +172,14 @@ public class MainActivity extends AppCompatActivity{
                 startActivity(cadastroActivity);
                 return true;
             case R.id.categoria3login:
-                Intent LoginActivity = new Intent(this, LoginActivity.class);
-                startActivity(LoginActivity);
+                Intent loginActivity = new Intent(this, LoginActivity.class);
+                startActivity(loginActivity);
                 return true;
-//            case R.id.help:
-//                showHelp();
-//                return true;
+            case R.id.categoria4pontuacao:
+                Intent pontuacao = new Intent(this, PontuacaoUserActivity.class);
+                pontuacao.putExtra("pontos", contador);
+                startActivity(pontuacao);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -187,13 +193,19 @@ public class MainActivity extends AppCompatActivity{
         super.onBackPressed();
     }
 
+//    @Override
+//    public void onStop(){
+//        if(tts != null){
+//            tts.stop();
+//            tts.shutdown();
+//        }
+//        super.onStop();
+//    }
+
     @Override
-    public void onPause(){
-        if(tts != null){
-            tts.stop();
-            tts.shutdown();
-        }
-        super.onPause();
+    protected void onDestroy() {
+        tts.shutdown();
+        super.onDestroy();
     }
 
     TextWatcher textWatcher = new TextWatcher() {
