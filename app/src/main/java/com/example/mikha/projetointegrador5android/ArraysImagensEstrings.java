@@ -1,8 +1,12 @@
 package com.example.mikha.projetointegrador5android;
 
+import android.support.v4.content.res.TypedArrayUtils;
+
+import java.util.Collection;
+
 class ArraysImagensEstrings {
 
-    private static final String[] respostas = {
+    private static final String[] respostasCor = {
             "Amarelo",
             "Azul",
             "Cinza",
@@ -13,7 +17,9 @@ class ArraysImagensEstrings {
             "Rosa",
             "Verde",
             "Vermelho",
-            //numeros
+    };
+
+    private static final String[] respostasNumero = {
             "zero",
             "um",
             "dois",
@@ -23,8 +29,11 @@ class ArraysImagensEstrings {
             "seis",
             "sete",
             "oito",
-            "novo",
-            //objetos
+            "novo"
+
+    };
+
+    private static final String[] respostasObjetos = {
             "árvore",
             "colher",
             "garfo",
@@ -37,7 +46,7 @@ class ArraysImagensEstrings {
             "casa"
     };
 
-    private static final int[] imagens = {
+    private static final int[] imagensCor = {
             
             R.mipmap.catcor1,
             R.mipmap.catcor2,
@@ -48,7 +57,10 @@ class ArraysImagensEstrings {
             R.mipmap.catcor7,
             R.mipmap.catcor8,
             R.mipmap.catcor9,
-            R.mipmap.catcor10,
+            R.mipmap.catcor10
+    };
+
+    private static final int[] imagensNumero = {
             R.mipmap.catnum1,
             R.mipmap.catnum2,
             R.mipmap.catnum3,
@@ -57,25 +69,52 @@ class ArraysImagensEstrings {
             R.mipmap.catnum6,
             R.mipmap.catnum7,
             R.mipmap.catnum8,
-            R.mipmap.catnum9,
+            R.mipmap.catnum9
+    };
+
+    private static final int[] imagensObjetos = {
             R.mipmap.catobj1,
             R.mipmap.catobj2,
             R.mipmap.catobj3,
             R.mipmap.catobj4,
             R.mipmap.catobj5,
             R.mipmap.catobj6
-
     };
 
-    public int getImagens(int count) {
-        return imagens[count];
+    public String getRespostasCor(int count) {
+        return respostasCor[count];
     }
 
-    public String getRespostas(int count) {
-        return respostas[count];
+    public String getRespostasNumero(int count) {
+        return respostasNumero[count];
     }
 
-    public int checarTamanhoArray(){
-        return imagens.length;
+    public String getRespostasObjetos(int count) {
+        return respostasObjetos[count];
+    }
+
+    public int getImagensCor(int count) {
+        return imagensCor[count];
+    }
+
+    public int getImagensNumero(int count) {
+        return imagensNumero[count];
+    }
+
+    public int getImagensObjetos(int count) {
+        return imagensObjetos[count];
+    }
+
+
+    public int checarTamanhoArray(int id){
+        int tamanho = 0;
+        if (id==1){
+            tamanho = imagensObjetos.length;
+        }else if (id==2){
+            tamanho = imagensCor.length;
+        }else if (id==3){
+            tamanho = imagensNumero.length;
+        }
+        return tamanho;
     }
 }

@@ -85,7 +85,9 @@ public class CadastroActivity extends AppCompatActivity {
         user.setUsername(nomeDoUsuario.getText().toString() );
         user.setPassword(senhaDoUsuario.getText().toString() );
         user.setEmail(emailDoUsuario.getText().toString() );
-        user.setPontuacao("0");
+        user.setPontuacaoCor("0");
+        user.setPontuacaoNumero("0");
+        user.setPontuacaoObjeto("0");
         if (TextUtils.isEmpty(nomeDoUsuario.getText().toString())){
             //Nome is empty
             Toast.makeText(CadastroActivity.this, "Nome vazio", Toast.LENGTH_SHORT).show();

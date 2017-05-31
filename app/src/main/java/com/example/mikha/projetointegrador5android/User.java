@@ -10,9 +10,34 @@ public class User {
     private String username;
     private String email;
     private String password;
-    private String pontuacao;
+
+    private String pontuacaoCor, pontuacaoNumero, pontuacaoObjeto;
 
     public User() {}
+
+    public String getPontuacaoCor() {
+        return pontuacaoCor;
+    }
+
+    public void setPontuacaoCor(String pontuacaoCor) {
+        this.pontuacaoCor = pontuacaoCor;
+    }
+
+    public String getPontuacaoNumero() {
+        return pontuacaoNumero;
+    }
+
+    public void setPontuacaoNumero(String pontuacaoNumero) {
+        this.pontuacaoNumero = pontuacaoNumero;
+    }
+
+    public String getPontuacaoObjeto() {
+        return pontuacaoObjeto;
+    }
+
+    public void setPontuacaoObjeto(String pontuacaoObjeto) {
+        this.pontuacaoObjeto = pontuacaoObjeto;
+    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -46,19 +71,14 @@ public class User {
         return this.password;
     }
 
-    public String getPontuacao() {
-        return this.pontuacao;
-    }
 
-    public void setPontuacao(String pontuacao) {
-        this.pontuacao = pontuacao;
-    }
-
-    public User(String username, String email, String password, String pontuacao) {
+    public User(String username, String email, String password, String pontuacaoCor, String pontuacaoNumero, String pontuacaoObjeto) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.pontuacao = pontuacao;
+        this.pontuacaoCor = pontuacaoCor;
+        this.pontuacaoObjeto = pontuacaoObjeto;
+        this.pontuacaoNumero = pontuacaoNumero;
     }
 
 

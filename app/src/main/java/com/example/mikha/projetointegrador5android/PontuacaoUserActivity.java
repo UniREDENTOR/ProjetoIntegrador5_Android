@@ -1,6 +1,7 @@
 package com.example.mikha.projetointegrador5android;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +34,7 @@ import java.util.Map;
 public class PontuacaoUserActivity extends AppCompatActivity {
 
     PieChart graficoUser;
-    int pontos;
+    float pontosCor, pontosNumero, pontosObjeto;
 
     FirebaseUser user;
     FirebaseAuth auth;
@@ -64,23 +66,56 @@ public class PontuacaoUserActivity extends AppCompatActivity {
                 String username = map.get("username");
                 String password = map.get("password");
                 String email = map.get("email");
-                String pontuacao = map.get("pontuacao");
+                String pontuacaoObjeto = map.get("pontuacaoObjeto");
+                String pontuacaoCor = map.get("pontuacaoCor");
+                String pontuacaoNumero = map.get("pontuacaoNumero");
 
-                pontos = Integer.valueOf(pontuacao);
+                pontosObjeto = Float.parseFloat(pontuacaoObjeto);
+                pontosNumero = Float.parseFloat(pontuacaoNumero);
+                pontosCor = Float.parseFloat(pontuacaoCor);
 
-                Log.v("pontos: ",pontos+"");
                 Log.v("nome: ",email+"");
 
                 entries = new ArrayList<>();
-                entries.add(new PieEntry(pontos, 0));
+                entries.add(new PieEntry(pontosCor, "cor"));
+                entries.add(new PieEntry(pontosNumero, "numero"));
+                entries.add(new PieEntry(pontosObjeto, "objeto"));
 
-                PieDataSet dataset = new PieDataSet(entries, "pontuação");
+                PieDataSet dataset = new PieDataSet(entries, "pontuações");
+
+                ArrayList<Integer> colors = new ArrayList<Integer>();
+
+                for (int c : ColorTemplate.VORDIPLOM_COLORS)
+                    colors.add(c);
+
+                for (int c : ColorTemplate.JOYFUL_COLORS)
+                    colors.add(c);
+
+                for (int c : ColorTemplate.COLORFUL_COLORS)
+                    colors.add(c);
+
+                for (int c : ColorTemplate.LIBERTY_COLORS)
+                    colors.add(c);
+
+                for (int c : ColorTemplate.PASTEL_COLORS)
+                    colors.add(c);
+
+                colors.add(ColorTemplate.getHoloBlue());
+
+                dataset.setColors(colors);
+                dataset.setValueTextSize(30);
 
                 PieData data = new PieData(dataset);
+
                 PieChart chart = new PieChart(getApplicationContext());
                 setContentView(chart);
                 chart.setData(data);
-                chart.setContentDescription("pontução");
+                chart.setEntryLabelColor(R.color.colorPrimaryDark);
+                chart.setEntryLabelTextSize(15);
+                chart.setEntryLabelTypeface(Typeface.SANS_SERIF);
+                chart.setContentDescription("pontuações");
+                chart.setCenterText("Pontuações");
+                chart.setCenterTextSize(15);
             }
 
             @Override

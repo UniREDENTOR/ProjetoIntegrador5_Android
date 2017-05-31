@@ -3,7 +3,6 @@ package com.example.mikha.projetointegrador5android;
 import android.content.Intent;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,12 +10,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     TextToSpeech tts;
     EditText editTextPrincipal;
 
-    int contador;
+    int contadorCor, contadorObjeto, contadorNumero, queTelaEstamos;
 
     Button botaoDeFalar;
     Button botaoDeMudarImagem;
@@ -45,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
     TextView resultadoPalavra;
 
-    int queTelaEstamos;
-
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     LinearLayout linearLayoutDoEditTextEButton;
@@ -55,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     DatabaseReference databaseRef;
-    
+
+    int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
 
         final Locale localeBR = new Locale("pt","BR");
         firebaseAuth = firebaseAuth.getInstance();
-        contador = 0;
+        contadorNumero = 0;
+        contadorCor = 0;
+        contadorObjeto = 0;
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -107,16 +104,24 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (botaoDeMudarImagem.getText().equals("Avançar")) {
-                    if (contador+1 <= classeArrays.checarTamanhoArray()){
-                        Log.v("contador: ",""+contador);
-                        Log.v("tamanho do array: ",""+classeArrays.checarTamanhoArray());
-                        linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagens(contador));
-                        resposta = classeArrays.getRespostas(contador);
-                        editTextPrincipal.getText().clear();
-                    }else{
-                        alterarTelas();
-                        resultadoPalavra.setText("Fim do jogo! :D");
+
+                    if (id==1){
+                        if (contadorObjeto+1 <= classeArrays.checarTamanhoArray(id)){
+                            linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensObjetos(contadorObjeto));
+                            resposta = classeArrays.getRespostasObjetos(contadorObjeto);
+                        }
+                    }else if(id==2){
+                        if (contadorCor+1 <= classeArrays.checarTamanhoArray(id)){
+                            linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensCor(contadorCor));
+                            resposta = classeArrays.getRespostasCor(contadorCor);
+                        }
+                    }else if(id==3){
+                        if (contadorNumero+1 <= classeArrays.checarTamanhoArray(id)){
+                            linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensNumero(contadorNumero));
+                            resposta = classeArrays.getRespostasNumero(contadorNumero);
+                        }
                     }
+                    editTextPrincipal.getText().clear();
                 }
                 alterarTelas();
             }
@@ -130,13 +135,23 @@ public class MainActivity extends AppCompatActivity {
                 alterarTelas();
                 if (testeResultado()) {
                     resultadoPalavra.setText("Você acertou! Pressione o botão para continuar");
-                    contador++;
-                    String pontuaçao = String.valueOf(contador);
                     FirebaseUser user = firebaseAuth.getCurrentUser();
                     databaseRef = FirebaseDatabase.getInstance().getReference();
-                    databaseRef.child(user.getUid()).child("pontuacao").setValue(pontuaçao);
+                    if (id==1){
+                        contadorObjeto++;
+                        String pontuacao = String.valueOf(contadorObjeto);
+                        databaseRef.child(user.getUid()).child("pontuacaoObjeto").setValue(pontuacao);
+                    }else if (id==2){
+                        contadorCor++;
+                        String pontuacao = String.valueOf(contadorCor);
+                        databaseRef.child(user.getUid()).child("pontuacaoCor").setValue(pontuacao);
+                    }else if (id==3){
+                        contadorNumero++;
+                        String pontuacao = String.valueOf(contadorNumero);
+                        databaseRef.child(user.getUid()).child("pontuacaoNumero").setValue(pontuacao);
+                    }
                     botaoDeMudarImagem.setText("Avançar");
-                } else {
+                }else{
                     resultadoPalavra.setText("Você errou, tente novamente");
                     botaoDeMudarImagem.setText("voltar");
                 }
@@ -165,9 +180,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.categoria1:
-                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagens(contador));
-                resposta = classeArrays.getRespostas(contador);
+            case R.id.categoria1Objetos:
+                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensObjetos(contadorObjeto));
+                resposta = classeArrays.getRespostasObjetos(contadorObjeto);
+                id = 1;
+                return true;
+            case R.id.categoria2Cores:
+                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensCor(contadorCor));
+                resposta = classeArrays.getRespostasCor(contadorCor);
+                id = 2;
+                return true;
+            case R.id.categoria3Numeros:
+                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensNumero(contadorNumero));
+                resposta = classeArrays.getRespostasNumero(contadorNumero);
+                id = 3;
                 return true;
             case R.id.categoria2cadastro:
                 Intent cadastroActivity = new Intent(this, CadastroActivity.class);
@@ -179,7 +205,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             case R.id.categoria4pontuacao:
                 Intent pontuacao = new Intent(this, PontuacaoUserActivity.class);
-                pontuacao.putExtra("pontos", contador);
                 startActivity(pontuacao);
                 return true;
             default:
