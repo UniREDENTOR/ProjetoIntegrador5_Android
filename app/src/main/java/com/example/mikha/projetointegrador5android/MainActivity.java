@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
     EditText editTextPrincipal;
 
-    int contadorCor, contadorObjeto, contadorNumero, queTelaEstamos;
+    int contadorCor, contadorObjeto, contadorNumero, queTelaEstamos, id;
 
     Button botaoDeFalar, botaoDeMudarImagem;
 
@@ -64,16 +64,14 @@ public class MainActivity extends AppCompatActivity {
     ConstraintLayout linearLayoutDoEditTextEButton, linearLayoutDoTextViewDoFragment;
     LinearLayout linearLayoutDaImagemDoFragment;
 
-    FirebaseAuth firebaseAuth;
-    DatabaseReference databaseRef;
+    FirebaseAuth auth;
+    DatabaseReference databaseRef, userDB;
 
     FirebaseUser user;
 
     Toolbar toolbar;
 
     SharedPreferences sharedPreferences;
-
-    int id, contadorObjeto2;
 
     private View.OnClickListener onClickListener;
 
@@ -103,12 +101,13 @@ public class MainActivity extends AppCompatActivity {
         int theme = sharedPreferences.getInt("THEME", 1);
 
         final Locale localeBR = new Locale("pt","BR");
-        firebaseAuth = firebaseAuth.getInstance();
+        auth = auth.getInstance();
         contadorNumero = 0;
         contadorCor = 0;
         contadorObjeto = 0;
         databaseRef = FirebaseDatabase.getInstance().getReference();
-        user = firebaseAuth.getCurrentUser();
+        user = auth.getCurrentUser();
+        userDB = databaseRef.child(user.getUid());
 
         switch (theme){
             case 1: setTheme(R.style.AppTheme);
@@ -260,13 +259,38 @@ public class MainActivity extends AppCompatActivity {
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        firebaseAuth.addAuthStateListener(mAuthListener);
+        auth.addAuthStateListener(mAuthListener);
+        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+
+                Log.v("mapString", map+"");
+
+                String username = map.get("username");
+                String password = map.get("password");
+                String email = map.get("email");
+                String pontuacaoObjeto = map.get("pontuacaoObjeto");
+                String pontuacaoCor = map.get("pontuacaoCor");
+                String pontuacaoNumero = map.get("pontuacaoNumero");
+
+                contadorObjeto = Integer.parseInt(pontuacaoObjeto);
+                contadorCor = Integer.parseInt(pontuacaoCor);
+                contadorNumero = Integer.parseInt(pontuacaoNumero);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public boolean testeResultado() {
@@ -286,8 +310,8 @@ public class MainActivity extends AppCompatActivity {
 
         switch (item.getItemId()) {
             case R.id.categoria1Objetos:
-                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensObjetos(contadorObjeto));
-                resposta = classeArrays.getRespostasObjetos(contadorObjeto);
+                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensObjetos(contadorCor));
+                resposta = classeArrays.getRespostasObjetos(contadorCor);
                 id = 1;
                 return true;
             case R.id.categoria2Cores:
