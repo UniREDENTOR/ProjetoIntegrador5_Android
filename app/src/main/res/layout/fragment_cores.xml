@@ -1,0 +1,135 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/md_white_1000"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.example.mikha.projetointegrador5android.Cores"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:paddingTop="35dp"
+        android:gravity="center_horizontal">
+
+
+        <com.cuboid.cuboidcirclebutton.CuboidButton
+            android:id="@+id/buttonBlue"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:text="Azul"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:cub_border_radius="0dp"
+            app:cub_color="#2196f3"
+            app:cub_hover_color="#64b5f6"
+            app:cub_riple_effect="true"
+            />
+
+        <com.cuboid.cuboidcirclebutton.CuboidButton
+            android:id="@+id/buttonLaranja"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:text="Laranja"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:cub_border_radius="0dp"
+            app:cub_color="@color/md_orange_A700"
+            app:cub_hover_color="#ffb74d"
+            app:cub_riple_effect="true"
+            />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:gravity="center_horizontal"
+        android:paddingTop="35dp"
+        android:layout_weight="0.09">
+
+        <com.cuboid.cuboidcirclebutton.CuboidButton
+            android:id="@+id/buttonYellow"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:text="Amarelo"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:cub_border_radius="0dp"
+            app:cub_color="@color/md_yellow_A700"
+            app:cub_hover_color="@color/md_yellow_400"
+            app:cub_riple_effect="true"
+            />
+
+
+        <com.cuboid.cuboidcirclebutton.CuboidButton
+            android:id="@+id/buttonGreen"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:text="Verde"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:cub_border_radius="0dp"
+            app:cub_color="#2E7D32"
+            app:cub_hover_color="#A5D6A7"
+            app:cub_riple_effect="true"
+            />
+
+
+    </TableRow>
+
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:gravity="center_horizontal"
+        android:paddingTop="35dp"
+        android:layout_weight="0.09">
+
+
+        <com.cuboid.cuboidcirclebutton.CuboidButton
+            android:id="@+id/buttonRed"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:text="Vermelho"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:cub_border_radius="0dp"
+            app:cub_color="#d32f2f"
+            app:cub_hover_color="#f44336"
+            app:cub_riple_effect="true"
+            />
+
+
+        <com.cuboid.cuboidcirclebutton.CuboidButton
+            android:id="@+id/buttonPink"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:text="Rosa"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:cub_border_radius="0dp"
+            app:cub_color="#ec407a"
+            app:cub_hover_color="#f44336"
+            app:cub_riple_effect="true"
+            />
+
+    </TableRow>
+
+</LinearLayout>

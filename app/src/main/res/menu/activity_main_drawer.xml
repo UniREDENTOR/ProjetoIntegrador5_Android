@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_config"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Configurações" />
+        <item
+            android:id="@+id/nav_pontuacao"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="Pontuação" />
+
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/common_full_open_on_phone"
+            android:title="Login" />
+
+        <item
+            android:id="@+id/nav_cadastro"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Cadastro" />
+
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Pontuação" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Desempenho" />
+        </menu>
+    </item>
+
+</menu>

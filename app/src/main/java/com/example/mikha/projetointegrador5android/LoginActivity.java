@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     BootstrapEditText emailLogin;
     BootstrapEditText passwordLogin;
-    BootstrapButton botaoConfirmarLogin;
+    BootstrapButton botaoConfirmarLogin, botaoPaginaDeCadastro;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         emailLogin = (BootstrapEditText) findViewById(R.id.textEditEmailLogin);
         passwordLogin = (BootstrapEditText) findViewById(R.id.textEditPasswordLogin);
         botaoConfirmarLogin = (BootstrapButton) findViewById(R.id.botaoConfirmarLogin);
+        botaoPaginaDeCadastro = (BootstrapButton) findViewById(R.id.botaoPaginaDeCadastro);
         mAuth = FirebaseAuth.getInstance();
 
         botaoConfirmarLogin.setOnClickListener(new View.OnClickListener() {
@@ -44,11 +45,19 @@ public class LoginActivity extends AppCompatActivity {
                             Log.w("tag", "signInWithEmail:failed", task.getException());
                             Toast.makeText(LoginActivity.this, "falhou", Toast.LENGTH_SHORT).show();
                         }else{
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             startActivity(intent);
                         }
                     }
                 });
+            }
+        });
+
+        botaoPaginaDeCadastro.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
+                startActivity(intent);
             }
         });
 

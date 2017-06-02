@@ -14,17 +14,5 @@
         android:id="@+id/categoria3Numeros"
         android:title="Números"
         app:showAsAction="withText" />
-    <item
-        android:id="@+id/categoria2cadastro"
-        android:title="cadastrar"
-        app:showAsAction="withText" />
-    <item
-        android:id="@+id/categoria3login"
-        android:title="Login"
-        app:showAsAction="withText" />
-    <item
-        android:id="@+id/categoria4pontuacao"
-        android:title="Pontuação"
-        app:showAsAction="withText" />
 
 </menu>

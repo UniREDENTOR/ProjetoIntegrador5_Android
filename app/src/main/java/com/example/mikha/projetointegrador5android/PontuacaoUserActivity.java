@@ -34,7 +34,6 @@ import java.util.Map;
 public class PontuacaoUserActivity extends AppCompatActivity {
 
     PieChart graficoUser;
-    float pontosCor, pontosNumero, pontosObjeto;
 
     FirebaseUser user;
     FirebaseAuth auth;
@@ -61,7 +60,7 @@ public class PontuacaoUserActivity extends AppCompatActivity {
 
                 Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
 
-                Log.v("map", map+"");
+                Log.v("mapString", map+"");
 
                 String username = map.get("username");
                 String password = map.get("password");
@@ -70,16 +69,12 @@ public class PontuacaoUserActivity extends AppCompatActivity {
                 String pontuacaoCor = map.get("pontuacaoCor");
                 String pontuacaoNumero = map.get("pontuacaoNumero");
 
-                pontosObjeto = Float.parseFloat(pontuacaoObjeto);
-                pontosNumero = Float.parseFloat(pontuacaoNumero);
-                pontosCor = Float.parseFloat(pontuacaoCor);
-
                 Log.v("nome: ",email+"");
 
                 entries = new ArrayList<>();
-                entries.add(new PieEntry(pontosCor, "cor"));
-                entries.add(new PieEntry(pontosNumero, "numero"));
-                entries.add(new PieEntry(pontosObjeto, "objeto"));
+                entries.add(new PieEntry(Integer.parseInt(pontuacaoCor), "cor"));
+                entries.add(new PieEntry(Integer.parseInt(pontuacaoNumero), "numero"));
+                entries.add(new PieEntry(Integer.parseInt(pontuacaoObjeto), "objeto"));
 
                 PieDataSet dataset = new PieDataSet(entries, "pontuações");
 
