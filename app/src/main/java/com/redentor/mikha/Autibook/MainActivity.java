@@ -1,4 +1,4 @@
-package com.example.mikha.projetointegrador5android;
+package com.redentor.mikha.Autibook;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button botaoDeFalar, botaoDeMudarImagem;
 
-    String oqSeraFalado, resposta, pontuacaoObjeto;
+    String oqSeraFalado, resposta;
 
     DrawerLayout drawer;
 
@@ -102,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
 
         final Locale localeBR = new Locale("pt","BR");
         auth = auth.getInstance();
-        contadorNumero = 0;
-        contadorCor = 0;
-        contadorObjeto = 0;
+        contadorNumero = getIntent().getIntExtra("pontuacaoNumero", 0);
+        contadorCor = getIntent().getIntExtra("pontuacaoCor", 0);
+        contadorObjeto = getIntent().getIntExtra("pontuacaoObjeto", 0);
         databaseRef = FirebaseDatabase.getInstance().getReference();
         user = auth.getCurrentUser();
         userDB = databaseRef.child(user.getUid());
@@ -171,6 +172,8 @@ public class MainActivity extends AppCompatActivity {
                         if (contadorObjeto+1 <= classeArrays.checarTamanhoArray(id)){
                             linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensObjetos(contadorObjeto));
                             resposta = classeArrays.getRespostasObjetos(contadorObjeto);
+                        }else{
+                            editTextPrincipal.setText("fim");
                         }
                     }else if(id==2){
                         if (contadorCor+1 <= classeArrays.checarTamanhoArray(id)){
@@ -184,8 +187,38 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     editTextPrincipal.getText().clear();
+                }else if (botaoDeMudarImagem.getText().equals("Voltar")){
+                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    startActivity(intent);
                 }
                 alterarTelas();
+            }
+        });
+
+        userDB.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+
+                Log.v("mapString", map+"");
+
+                String username = map.get("username");
+                String password = map.get("password");
+                String email = map.get("email");
+                String pontuacaoObjeto = map.get("pontuacaoObjeto");
+                String pontuacaoCor = map.get("pontuacaoCor");
+                String pontuacaoNumero = map.get("pontuacaoNumero");
+
+                contadorObjeto = Integer.parseInt(pontuacaoObjeto);
+                contadorCor = Integer.parseInt(pontuacaoCor);
+                contadorNumero = Integer.parseInt(pontuacaoNumero);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
             }
         });
 
@@ -198,17 +231,23 @@ public class MainActivity extends AppCompatActivity {
                 if (testeResultado()) {
                     resultadoPalavra.setText("Você acertou! Pressione o botão para continuar");
                     if (id==1){
-                        contadorObjeto++;
-                        String pontuacao = String.valueOf(contadorObjeto);
-                        databaseRef.child(user.getUid()).child("pontuacaoObjeto").setValue(pontuacao);
+                        if (contadorObjeto != classeArrays.checarTamanhoArray(id)){
+                            contadorObjeto++;
+                            String pontuacao = String.valueOf(contadorObjeto);
+                            databaseRef.child(user.getUid()).child("pontuacaoObjeto").setValue(pontuacao);
+                        }
                     }else if (id==2){
-                        contadorCor++;
-                        String pontuacao = String.valueOf(contadorCor);
-                        databaseRef.child(user.getUid()).child("pontuacaoCor").setValue(pontuacao);
+                        if (contadorCor != classeArrays.checarTamanhoArray(id)){
+                            contadorCor++;
+                            String pontuacao = String.valueOf(contadorCor);
+                            databaseRef.child(user.getUid()).child("pontuacaoCor").setValue(pontuacao);
+                        }
                     }else if (id==3){
-                        contadorNumero++;
-                        String pontuacao = String.valueOf(contadorNumero);
-                        databaseRef.child(user.getUid()).child("pontuacaoNumero").setValue(pontuacao);
+                        if (contadorNumero != classeArrays.checarTamanhoArray(id)){
+                            contadorNumero++;
+                            String pontuacao = String.valueOf(contadorNumero);
+                            databaseRef.child(user.getUid()).child("pontuacaoNumero").setValue(pontuacao);
+                        }
                     }
                     botaoDeMudarImagem.setText("Avançar");
                 }else{
@@ -231,11 +270,11 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.nav_config:
-                setTitle("Configurações");
-                fragment = new Cores();
-                trocaFragmento(fragment, R.id.container);
-                return true;
+//            case R.id.nav_config:
+//                setTitle("Configurações");
+//                fragment = new Cores();
+//                trocaFragmento(fragment, R.id.container);
+//                return true;
             case R.id.nav_pontuacao:
                 Intent pontuacao = new Intent(MainActivity.this, PontuacaoUserActivity.class);
                 startActivity(pontuacao);
@@ -265,6 +304,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         auth.addAuthStateListener(mAuthListener);
+        atualizarBD();
+    }
+
+    public void atualizarBD(){
         userDB.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -308,27 +351,60 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
+
         switch (item.getItemId()) {
             case R.id.categoria1Objetos:
-                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensObjetos(contadorCor));
-                resposta = classeArrays.getRespostasObjetos(contadorCor);
                 id = 1;
-                return true;
+                if (contadorObjeto != classeArrays.checarTamanhoArray(id)){
+                    linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensObjetos(contadorObjeto));
+                    resposta = classeArrays.getRespostasObjetos(contadorObjeto);
+                    return true;
+                }else{
+                    editTextPrincipal.setVisibility(EditText.INVISIBLE);
+                    botaoDeFalar.setVisibility(Button.INVISIBLE);
+                    botaoDeMudarImagem.setText("Voltar");
+                    linearLayoutDaImagemDoFragment.setVisibility(LinearLayout.VISIBLE);
+                    linearLayoutDaImagemDoFragment.setBackgroundResource(R.mipmap.parabens);
+                    linearLayoutDoTextViewDoFragment.setVisibility(LinearLayout.VISIBLE);
+                    resultadoPalavra.setText("Você chegou no fim desta fase. PARABÉNS!");
+                    return true;
+                }
             case R.id.categoria2Cores:
-                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensCor(contadorCor));
-                resposta = classeArrays.getRespostasCor(contadorCor);
                 id = 2;
-                return true;
+                if (contadorCor != classeArrays.checarTamanhoArray(id)){
+                    linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensCor(contadorCor));
+                    resposta = classeArrays.getRespostasCor(contadorCor);
+                    return true;
+                }else{
+                    editTextPrincipal.setVisibility(EditText.INVISIBLE);
+                    botaoDeFalar.setVisibility(Button.INVISIBLE);
+                    botaoDeMudarImagem.setText("Voltar");
+                    linearLayoutDaImagemDoFragment.setVisibility(LinearLayout.VISIBLE);
+                    linearLayoutDaImagemDoFragment.setBackgroundResource(R.mipmap.parabens);
+                    linearLayoutDoTextViewDoFragment.setVisibility(LinearLayout.VISIBLE);
+                    resultadoPalavra.setText("Você chegou no fim desta fase. PARABÉNS!");
+                    return true;
+                }
             case R.id.categoria3Numeros:
-                linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensNumero(contadorNumero));
-                resposta = classeArrays.getRespostasNumero(contadorNumero);
                 id = 3;
-                return true;
+                if (contadorNumero != classeArrays.checarTamanhoArray(id)){
+                    linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensNumero(contadorNumero));
+                    resposta = classeArrays.getRespostasNumero(contadorNumero);
+                    return true;
+                }else{
+                    editTextPrincipal.setVisibility(EditText.INVISIBLE);
+                    botaoDeFalar.setVisibility(Button.INVISIBLE);
+                    botaoDeMudarImagem.setText("Voltar");
+                    linearLayoutDaImagemDoFragment.setVisibility(LinearLayout.VISIBLE);
+                    linearLayoutDaImagemDoFragment.setBackgroundResource(R.mipmap.parabens);
+                    linearLayoutDoTextViewDoFragment.setVisibility(LinearLayout.VISIBLE);
+                    resultadoPalavra.setText("Você chegou no fim desta fase. PARABÉNS!");
+                    return true;
+                }
             default:
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
     private void navigationBarStatusBar() {
 
@@ -382,15 +458,6 @@ public class MainActivity extends AppCompatActivity {
         }
         super.onBackPressed();
     }
-
-//    @Override
-//    public void onStop(){
-//        if(tts != null){
-//            tts.stop();
-//            tts.shutdown();
-//        }
-//        super.onStop();
-//    }
 
     @Override
     protected void onDestroy() {
