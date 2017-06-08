@@ -1,4 +1,4 @@
-package com.example.mikha.projetointegrador5android;
+package com.redentor.mikha.Autibook;
 
 import org.junit.Test;
 

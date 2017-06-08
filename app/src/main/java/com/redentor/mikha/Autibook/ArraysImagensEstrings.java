@@ -1,8 +1,4 @@
-package com.example.mikha.projetointegrador5android;
-
-import android.support.v4.content.res.TypedArrayUtils;
-
-import java.util.Collection;
+package com.redentor.mikha.Autibook;
 
 class ArraysImagensEstrings {
 

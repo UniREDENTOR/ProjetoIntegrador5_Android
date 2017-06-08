@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.mikha.projetointegrador5android.LoginActivity">
+    tools:context="com.redentor.mikha.Autibook.LoginActivity">
 
     <com.beardedhen.androidbootstrap.BootstrapEditText
         android:id="@+id/textEditPasswordLogin"

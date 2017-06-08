@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="com.example.mikha.projetointegrador5android.Splashscreen"
+    tools:context="com.redentor.mikha.Autibook.Splashscreen"
     android:weightSum="1">
 
 

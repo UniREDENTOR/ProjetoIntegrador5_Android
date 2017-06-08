@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mikha.projetointegrador5android">
+    package="com.redentor.mikha.Autibook">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -17,13 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LoginActivity"
+            android:name="com.redentor.mikha.Autibook.LoginActivity"
             android:label="@string/app_name"
-            android:parentActivityName=".Splashscreen"
+            android:parentActivityName="com.redentor.mikha.Autibook.Splashscreen"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.mikha.projetointegrador5android.Splashscreen" />
+                android:value="com.redentor.mikha.Autibook.Splashscreen" />
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,20 +31,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Splashscreen">
+        <activity android:name="com.redentor.mikha.Autibook.Splashscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CadastroActivity" />
+        <activity android:name="com.redentor.mikha.Autibook.CadastroActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.redentor.mikha.Autibook.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".PontuacaoUserActivity" />
-        <activity android:name=".HomeActivity"></activity>
+        <activity android:name="com.redentor.mikha.Autibook.PontuacaoUserActivity" />
+        <activity android:name="com.redentor.mikha.Autibook.HomeActivity"></activity>
     </application>
 
 </manifest>

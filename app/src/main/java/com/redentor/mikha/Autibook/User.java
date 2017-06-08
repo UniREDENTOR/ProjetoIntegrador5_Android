@@ -1,6 +1,5 @@
-package com.example.mikha.projetointegrador5android;
+package com.redentor.mikha.Autibook;
 
-import com.firebase.client.Firebase;
 import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties

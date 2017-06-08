@@ -1,6 +1,7 @@
-package com.example.mikha.projetointegrador5android;
+package com.redentor.mikha.Autibook;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,12 +12,8 @@ import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapEditText;
-import com.beardedhen.androidbootstrap.BootstrapProgressBar;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -24,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import java.util.Map;
 
 public class CadastroActivity extends AppCompatActivity {
 
@@ -104,16 +100,18 @@ public class CadastroActivity extends AppCompatActivity {
     }
 
     private void saveUser(){
+        progressDialog.setMessage("Registrando...");
+        progressDialog.show();
         initUser();
         mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    progressDialog.setMessage("Registrando...");
-                    progressDialog.show();
                     firebaseUser = mAuth.getCurrentUser();
                     databaseRef.child(firebaseUser.getUid()).setValue(user);
-                    finish();
+                    Log.d("user",user+"");
+                    Intent intent = new Intent(CadastroActivity.this, HomeActivity.class);
+                    startActivity(intent);
                 }else{
                     Toast.makeText(CadastroActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                 }
