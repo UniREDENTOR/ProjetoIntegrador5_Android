@@ -50,6 +50,12 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(main);
             }
         });
+
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+            }
+        };
     }
 
     @Override

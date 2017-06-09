@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (emailLogin.getText().toString().equals("") && passwordLogin.getText().toString().equals("")){
                     Toast.makeText(LoginActivity.this, "é preciso preencher Email e Senha", Toast.LENGTH_LONG).show();
-                }else if (passwordLogin.getText() == null){
+                }else if (passwordLogin.getText() == null || passwordLogin.getText().toString().isEmpty()){
                     Toast.makeText(LoginActivity.this, "Por favor, digite a senha", Toast.LENGTH_LONG).show();
                 }else if (emailLogin.getText().toString().equals("")) {
                     Toast.makeText(LoginActivity.this, "Por favor, digite o email", Toast.LENGTH_LONG).show();

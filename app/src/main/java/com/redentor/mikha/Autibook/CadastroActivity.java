@@ -31,7 +31,6 @@ public class CadastroActivity extends AppCompatActivity {
     BootstrapEditText emailDoUsuario;
 
     BootstrapButton confirmarCadastro;
-    BootstrapButton botaoAutoFill;
 
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
@@ -62,15 +61,6 @@ public class CadastroActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 new CadastrarTask().execute();
-            }
-        });
-
-        botaoAutoFill.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nomeDoUsuario.setText("mika");
-                senhaDoUsuario.setText("0803890");
-                emailDoUsuario.setText("mikhael.pc@hotmail.com");
             }
         });
     }
@@ -114,7 +104,6 @@ public class CadastroActivity extends AppCompatActivity {
         senhaDoUsuario = (BootstrapEditText) findViewById(R.id.textEditPassword);
         emailDoUsuario = (BootstrapEditText) findViewById(R.id.textEditEmail);
         confirmarCadastro = (BootstrapButton) findViewById(R.id.botaoConfirmar);
-        botaoAutoFill = (BootstrapButton) findViewById(R.id.botaoAutoFill);
         textviewInfo = (TextView) findViewById(R.id.textviewInfo);
         progressDialog = new ProgressDialog(this);
     }
