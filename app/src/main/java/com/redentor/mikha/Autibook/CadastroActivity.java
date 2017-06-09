@@ -2,12 +2,15 @@ package com.redentor.mikha.Autibook;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -22,9 +25,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class CadastroActivity extends AppCompatActivity {
+import java.io.IOException;
 
-    ProgressDialog progressDialog;
+public class CadastroActivity extends AppCompatActivity {
 
     BootstrapEditText nomeDoUsuario;
     BootstrapEditText senhaDoUsuario;
@@ -37,6 +40,10 @@ public class CadastroActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     private DatabaseReference databaseRef;
 
+    TextView textviewInfo;
+
+    ProgressDialog progressDialog;
+
     private User user;
 
     @Override
@@ -45,15 +52,19 @@ public class CadastroActivity extends AppCompatActivity {
         TypefaceProvider.registerDefaultIconSets();
         Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_cadastro);
+        progressDialog = new ProgressDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
         databaseRef = FirebaseDatabase.getInstance().getReference();
+
         initViews();
 
-        confirmarCadastro.setOnClickListener(new View.OnClickListener() {
+        textviewInfo.setText("Preencha os campos e aperte no para cadastrar");
+
+        confirmarCadastro.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                saveUser();
+                new CadastrarTask().execute();
             }
         });
 
@@ -67,12 +78,47 @@ public class CadastroActivity extends AppCompatActivity {
         });
     }
 
+    private class CadastrarTask extends AsyncTask<Void, Integer, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.setMessage("Registrando...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected String doInBackground(Void... params) {
+            String result = "";
+            CadastroActivity cAcivity = CadastroActivity.this;
+            try {
+                cAcivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        saveUser();
+                    }
+                });
+                result = "Registro feito";
+            }catch (Exception e){
+                Log.e("TAG_ASYNC_TASK", e.getMessage());
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            textviewInfo.setText(s);
+            progressDialog.hide();
+        }
+    }
+
     protected void initViews() {
         nomeDoUsuario = (BootstrapEditText) findViewById(R.id.textEditNomeUsuario);
         senhaDoUsuario = (BootstrapEditText) findViewById(R.id.textEditPassword);
         emailDoUsuario = (BootstrapEditText) findViewById(R.id.textEditEmail);
         confirmarCadastro = (BootstrapButton) findViewById(R.id.botaoConfirmar);
         botaoAutoFill = (BootstrapButton) findViewById(R.id.botaoAutoFill);
+        textviewInfo = (TextView) findViewById(R.id.textviewInfo);
         progressDialog = new ProgressDialog(this);
     }
 

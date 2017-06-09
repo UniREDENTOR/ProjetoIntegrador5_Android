@@ -2,6 +2,7 @@ package com.redentor.mikha.Autibook;
 
 import android.app.ProgressDialog;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,11 @@ public class PontuacaoUserActivity extends AppCompatActivity {
 
     ArrayList<PieEntry> entries;
 
+    String pontuacaoObjeto, pontuacaoCor, pontuacaoNumero;
+
+    ArrayList<String> pontos = new ArrayList<String>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,9 +51,17 @@ public class PontuacaoUserActivity extends AppCompatActivity {
         databaseRef = FirebaseDatabase.getInstance().getReference();
         user = auth.getCurrentUser();
         userDB = databaseRef.child(user.getUid());
+        
         progressDialog = new ProgressDialog(this);
 
         graficoUser = (PieChart) findViewById(R.id.graficoUser);
+
+        progressDialog.setMessage("Buscando Pizza...");
+        progressDialog.getProgress();
+        progressDialog.show();
+        progressDialog.setIndeterminate(true);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+
 
         userDB.addValueEventListener(new ValueEventListener() {
             @Override
@@ -57,19 +71,27 @@ public class PontuacaoUserActivity extends AppCompatActivity {
 
                 Log.v("mapString", map+"");
 
-                String username = map.get("username");
-                String password = map.get("password");
-                String email = map.get("email");
-                String pontuacaoObjeto = map.get("pontuacaoObjeto");
-                String pontuacaoCor = map.get("pontuacaoCor");
-                String pontuacaoNumero = map.get("pontuacaoNumero");
+                pontuacaoObjeto = map.get("pontuacaoObjeto");
+                pontuacaoCor = map.get("pontuacaoCor");
+                pontuacaoNumero = map.get("pontuacaoNumero");
 
-                Log.v("nome: ",email+"");
+                pontos.add(pontuacaoCor);
+                pontos.add(pontuacaoNumero);
+                pontos.add(pontuacaoObjeto);
+
+                progressDialog.incrementProgressBy(50);
+                progressDialog.getProgress();
 
                 entries = new ArrayList<>();
-                entries.add(new PieEntry(Integer.parseInt(pontuacaoCor), "cor"));
-                entries.add(new PieEntry(Integer.parseInt(pontuacaoNumero), "numero"));
-                entries.add(new PieEntry(Integer.parseInt(pontuacaoObjeto), "objeto"));
+                if (!pontos.get(0).equals("0")){
+                    entries.add(new PieEntry(Integer.parseInt(pontos.get(0)), "cor"));
+                }
+                if (!pontos.get(1).equals("0")){
+                    entries.add(new PieEntry(Integer.parseInt(pontos.get(1)), "numero"));
+                }
+                if (!pontos.get(2).equals("0")){
+                    entries.add(new PieEntry(Integer.parseInt(pontos.get(2)), "objeto"));
+                }
 
                 PieDataSet dataset = new PieDataSet(entries, "pontuações");
 
@@ -106,23 +128,159 @@ public class PontuacaoUserActivity extends AppCompatActivity {
                 chart.setContentDescription("pontuações");
                 chart.setCenterText("Pontuações");
                 chart.setCenterTextSize(15);
+
+
+                progressDialog.hide();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
 
+//        new AtualizarPie().execute();
 
+//        userDB.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+//
+//                Log.v("mapString", map+"");
+//
+//                String pontuacaoObjeto = map.get("pontuacaoObjeto");
+//                String pontuacaoCor = map.get("pontuacaoCor");
+//                String pontuacaoNumero = map.get("pontuacaoNumero");
+//
+//                entries = new ArrayList<>();
+//                entries.add(new PieEntry(Integer.parseInt(pontuacaoCor), "cor"));
+//                entries.add(new PieEntry(Integer.parseInt(pontuacaoNumero), "numero"));
+//                entries.add(new PieEntry(Integer.parseInt(pontuacaoObjeto), "objeto"));
+//
+//                PieDataSet dataset = new PieDataSet(entries, "pontuações");
+//
+//                ArrayList<Integer> colors = new ArrayList<Integer>();
+//
+//                for (int c : ColorTemplate.VORDIPLOM_COLORS)
+//                    colors.add(c);
+//
+//                for (int c : ColorTemplate.JOYFUL_COLORS)
+//                    colors.add(c);
+//
+//                for (int c : ColorTemplate.COLORFUL_COLORS)
+//                    colors.add(c);
+//
+//                for (int c : ColorTemplate.LIBERTY_COLORS)
+//                    colors.add(c);
+//
+//                for (int c : ColorTemplate.PASTEL_COLORS)
+//                    colors.add(c);
+//
+//                colors.add(ColorTemplate.getHoloBlue());
+//
+//                dataset.setColors(colors);
+//                dataset.setValueTextSize(30);
+//
+//                PieData data = new PieData(dataset);
+//
+//                PieChart chart = new PieChart(getApplicationContext());
+//                setContentView(chart);
+//                chart.setData(data);
+//                chart.setEntryLabelColor(R.color.colorPrimaryDark);
+//                chart.setEntryLabelTextSize(15);
+//                chart.setEntryLabelTypeface(Typeface.SANS_SERIF);
+//                chart.setContentDescription("pontuações");
+//                chart.setCenterText("Pontuações");
+//                chart.setCenterTextSize(15);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
     }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        progressDialog.setMessage("Registrando...");
-        progressDialog.show();
-    }
-
+//    public class AtualizarPie extends AsyncTask<Object, Object, ArrayList<String>> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            progressDialog.setMessage("Buscando Pizza...");
+//            progressDialog.show();
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected ArrayList<String> doInBackground(Object... params) {
+//            userDB.addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                    Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+//
+//                    Log.v("mapString", map+"");
+//
+//                    pontuacaoObjeto = map.get("pontuacaoObjeto");
+//                    pontuacaoCor = map.get("pontuacaoCor");
+//                    pontuacaoNumero = map.get("pontuacaoNumero");
+//
+//                    pontos.add(pontuacaoCor);
+//                    pontos.add(pontuacaoNumero);
+//                    pontos.add(pontuacaoObjeto);
+//                }
+//
+//                @Override
+//                public void onCancelled(DatabaseError databaseError) {
+//
+//                }
+//            });
+//            return pontos;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(ArrayList<String> s) {
+//            entries = new ArrayList<>();
+//            entries.add(new PieEntry(Integer.parseInt(pontos.get(0)), "cor"));
+//            entries.add(new PieEntry(Integer.parseInt(pontos.get(1)), "numero"));
+//            entries.add(new PieEntry(Integer.parseInt(pontos.get(2)), "objeto"));
+//
+//            PieDataSet dataset = new PieDataSet(entries, "pontuações");
+//
+//            ArrayList<Integer> colors = new ArrayList<Integer>();
+//
+//            for (int c : ColorTemplate.VORDIPLOM_COLORS)
+//                colors.add(c);
+//
+//            for (int c : ColorTemplate.JOYFUL_COLORS)
+//                colors.add(c);
+//
+//            for (int c : ColorTemplate.COLORFUL_COLORS)
+//                colors.add(c);
+//
+//            for (int c : ColorTemplate.LIBERTY_COLORS)
+//                colors.add(c);
+//
+//            for (int c : ColorTemplate.PASTEL_COLORS)
+//                colors.add(c);
+//
+//            colors.add(ColorTemplate.getHoloBlue());
+//
+//            dataset.setColors(colors);
+//            dataset.setValueTextSize(30);
+//
+//            PieData data = new PieData(dataset);
+//
+//            PieChart chart = new PieChart(getApplicationContext());
+//            setContentView(chart);
+//            chart.setData(data);
+//            chart.setEntryLabelColor(R.color.colorPrimaryDark);
+//            chart.setEntryLabelTextSize(15);
+//            chart.setEntryLabelTypeface(Typeface.SANS_SERIF);
+//            chart.setContentDescription("pontuações");
+//            chart.setCenterText("Pontuações");
+//            chart.setCenterTextSize(15);
+//
+//            progressDialog.hide();
+//        }
+//    }
 }
