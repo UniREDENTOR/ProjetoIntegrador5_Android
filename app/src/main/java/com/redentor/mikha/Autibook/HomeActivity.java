@@ -50,17 +50,6 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(main);
             }
         });
-
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (user != null) {
-                    Log.d("tag", "onAuthStateChanged:signed_in:" + user.getUid());
-                } else {
-                    Log.d("tag", "onAuthStateChanged:signed_out");
-                }
-            }
-        };
     }
 
     @Override
@@ -76,9 +65,6 @@ public class HomeActivity extends AppCompatActivity {
                 Log.v("mapString", map+"");
 
                 if (map != null) {
-                    String username = map.get("username");
-                    String password = map.get("password");
-                    String email = map.get("email");
                     String pontuacaoObjeto = map.get("pontuacaoObjeto");
                     String pontuacaoCor = map.get("pontuacaoCor");
                     String pontuacaoNumero = map.get("pontuacaoNumero");

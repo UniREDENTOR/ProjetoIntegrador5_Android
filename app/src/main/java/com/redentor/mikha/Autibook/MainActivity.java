@@ -3,15 +3,12 @@ package com.redentor.mikha.Autibook;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.os.AsyncTaskCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -31,7 +28,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -195,9 +191,6 @@ public class MainActivity extends AppCompatActivity{
 
                 Log.v("mapString", map+"");
 
-                String username = map.get("username");
-                String password = map.get("password");
-                String email = map.get("email");
                 String pontuacaoObjeto = map.get("pontuacaoObjeto");
                 String pontuacaoCor = map.get("pontuacaoCor");
                 String pontuacaoNumero = map.get("pontuacaoNumero");
@@ -308,9 +301,6 @@ public class MainActivity extends AppCompatActivity{
 
                 Log.v("mapString", map+"");
 
-                String username = map.get("username");
-                String password = map.get("password");
-                String email = map.get("email");
                 String pontuacaoObjeto = map.get("pontuacaoObjeto");
                 String pontuacaoCor = map.get("pontuacaoCor");
                 String pontuacaoNumero = map.get("pontuacaoNumero");
@@ -395,46 +385,6 @@ public class MainActivity extends AppCompatActivity{
                 }
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void navigationBarStatusBar() {
-
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            // Fix issues for KitKat setting Status Bar color primary
-            if (Build.VERSION.SDK_INT >= 19) {
-                TypedValue typedValue19 = new TypedValue();
-                MainActivity.this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue19, true);
-                final int color = typedValue19.data;
-                FrameLayout statusBar = (FrameLayout) findViewById(R.id.toolbar);
-                statusBar.setBackgroundColor(color);
-            }
-
-            // Fix issues for Lollipop, setting Status Bar color primary dark
-            if (Build.VERSION.SDK_INT >= 21) {
-                TypedValue typedValue21 = new TypedValue();
-                MainActivity.this.getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue21, true);
-                final int color = typedValue21.data;
-                FrameLayout statusBar = (FrameLayout) findViewById(R.id.toolbar);
-                statusBar.setBackgroundColor(color);
-            }
-        }
-        // Fix landscape issues (only Lollipop)
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            if (Build.VERSION.SDK_INT >= 19) {
-                TypedValue typedValue19 = new TypedValue();
-                MainActivity.this.getTheme().resolveAttribute(R.attr.colorPrimary, typedValue19, true);
-                final int color = typedValue19.data;
-                FrameLayout statusBar = (FrameLayout) findViewById(R.id.toolbar);
-                statusBar.setBackgroundColor(color);
-            }
-            if (Build.VERSION.SDK_INT >= 21) {
-                TypedValue typedValue = new TypedValue();
-                MainActivity.this.getTheme().resolveAttribute(R.attr.colorPrimaryDark, typedValue, true);
-                final int color = typedValue.data;
-                FrameLayout statusBar = (FrameLayout) findViewById(R.id.toolbar);
-                statusBar.setBackgroundColor(color);
-            }
         }
     }
 

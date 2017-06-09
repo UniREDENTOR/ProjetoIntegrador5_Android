@@ -39,9 +39,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (emailLogin.getText().toString().equals("") && passwordLogin.getText().toString().equals("")){
                     Toast.makeText(LoginActivity.this, "é preciso preencher Email e Senha", Toast.LENGTH_LONG).show();
-                }else if (passwordLogin.getText().toString().equals("")){
+                }else if (passwordLogin.getText() == null){
                     Toast.makeText(LoginActivity.this, "Por favor, digite a senha", Toast.LENGTH_LONG).show();
-                }else if (emailLogin.getText().equals("")) {
+                }else if (emailLogin.getText().toString().equals("")) {
                     Toast.makeText(LoginActivity.this, "Por favor, digite o email", Toast.LENGTH_LONG).show();
                 }else{
                     mAuth.signInWithEmailAndPassword(emailLogin.getText().toString(), passwordLogin.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -49,8 +49,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             Log.d("tag", "signInWithEmail:onComplete:" + task.isSuccessful());
                             if (!task.isSuccessful()) {
-                                Log.w("tag", "signInWithEmail:failed", task.getException());
-                                Toast.makeText(LoginActivity.this, "falhou", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(LoginActivity.this, "Email ou senha incorretos", Toast.LENGTH_SHORT).show();
                             }else{
                                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
@@ -74,11 +73,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    Log.d("tag", "onAuthStateChanged:signed_in:" + user.getEmail());
-                } else {
-                    Log.d("tag", "onAuthStateChanged:signed_out");
-                }
             }
         };
     }
