@@ -2,11 +2,11 @@ package com.redentor.mikha.Autibook;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.os.Build;
+import android.net.Uri;
 import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -18,16 +18,17 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,11 +37,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.redentor.mikha.Autibook.fragments.HelpFragment;
+import com.redentor.mikha.Autibook.fragments.HelpFragment.OnFragmentInteractionListener;
 
 import java.util.Locale;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements OnFragmentInteractionListener{
+
+    Cores cores = new Cores ();
 
     ArraysImagensEstrings classeArrays = new ArraysImagensEstrings();
 
@@ -56,12 +61,12 @@ public class MainActivity extends AppCompatActivity{
 
     DrawerLayout drawer;
 
-    TextView resultadoPalavra;
+    TextView resultadoPalavra, textheaderNome, textheaderEmail;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-    ConstraintLayout linearLayoutDoEditTextEButton, linearLayoutDoTextViewDoFragment;
-    LinearLayout linearLayoutDaImagemDoFragment;
+    ConstraintLayout linearLayoutDoEditTextEButton, linearLayoutDoTextViewDoFragment, container;
+    LinearLayout linearLayoutDaImagemDoFragment, linear_container;
 
     FirebaseAuth auth;
     DatabaseReference databaseRef, userDB;
@@ -75,6 +80,10 @@ public class MainActivity extends AppCompatActivity{
     NavigationView navigationView;
 
     ActionBarDrawerToggle toggle;
+
+    FloatingActionButton botaoAjuda;
+
+    View header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,11 +100,19 @@ public class MainActivity extends AppCompatActivity{
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        botaoAjuda = (FloatingActionButton) findViewById(R.id.helpButton);
+        container = (ConstraintLayout) findViewById(R.id.container);
+        linear_container = (LinearLayout) findViewById(R.id.linear_container);
 
         navigationView.bringToFront();
 
+        header = navigationView.getHeaderView(0);
+
+        textheaderNome = (TextView)header.findViewById(R.id.textViewNomeHeader);
+        textheaderEmail = (TextView)header.findViewById(R.id.textViewEmailHeader);
+
         sharedPreferences = getSharedPreferences("VALUES", MODE_PRIVATE);
-        int theme = sharedPreferences.getInt("THEME", 1);
+        final int theme = sharedPreferences.getInt("THEME", 1);
 
         final Locale localeBR = new Locale("pt","BR");
         auth = auth.getInstance();
@@ -105,6 +122,10 @@ public class MainActivity extends AppCompatActivity{
         databaseRef = FirebaseDatabase.getInstance().getReference();
         user = auth.getCurrentUser();
         userDB = databaseRef.child(user.getUid());
+
+        textheaderNome.setText(getIntent().getStringExtra("userNome"));
+        Toast.makeText(getApplicationContext(), textheaderNome.getText(), Toast.LENGTH_SHORT).show();
+        textheaderEmail.setText(getIntent().getStringExtra("userEmail"));
 
         switch (theme){
             case 1: setTheme(R.style.AppTheme);
@@ -123,15 +144,10 @@ public class MainActivity extends AppCompatActivity{
 
         setSupportActionBar(toolbar);
 
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (user != null) {
-                    Log.d("tag", "onAuthStateChanged:signed_in:" + user.getUid());
-                    editTextPrincipal.setHint(user.getEmail());
-                } else {
-                    Log.d("tag", "onAuthStateChanged:signed_out");
-                }
             }
         };
 
@@ -148,6 +164,41 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 editTextPrincipal.addTextChangedListener(textWatcher);
+            }
+        });
+
+        botaoAjuda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.tutorialanim);
+                final Fragment fragment = new HelpFragment();
+                linear_container.startAnimation(animation);
+                trocaFragmento(fragment, R.id.container);
+
+
+                animation.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        linearLayoutDoTextViewDoFragment.setVisibility(LinearLayout.INVISIBLE);
+                        linearLayoutDoEditTextEButton.setVisibility(LinearLayout.INVISIBLE);
+//                        linear_container.setVisibility(LinearLayout.VISIBLE);
+                        botaoAjuda.hide();
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        alterarTelas();
+                        getSupportFragmentManager().popBackStackImmediate();
+                        linear_container.clearAnimation();
+                        botaoAjuda.show();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+
             }
         });
 
@@ -288,6 +339,8 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onStart() {
         super.onStart();
+        getSupportFragmentManager().popBackStackImmediate();
+        linear_container.setVisibility(LinearLayout.INVISIBLE);
         auth.addAuthStateListener(mAuthListener);
         atualizarBD();
     }
@@ -319,7 +372,12 @@ public class MainActivity extends AppCompatActivity{
     }
 
     public boolean testeResultado() {
-        return resposta.equalsIgnoreCase(oqSeraFalado);
+        try{
+            return resposta.equalsIgnoreCase(oqSeraFalado);
+        }catch (Throwable e){
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -392,6 +450,11 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public void onBackPressed(){
+        try {
+            linear_container.getAnimation().cancel();
+        }catch (Throwable e){
+            e.printStackTrace();
+        }
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }
@@ -449,6 +512,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void trocaFragmento(Fragment fragment, int id) {
-        getSupportFragmentManager().beginTransaction().replace(id, fragment, getTitle().toString()).commit();
+        getSupportFragmentManager().beginTransaction().replace(id, fragment, getTitle().toString()).addToBackStack("back").commit();
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

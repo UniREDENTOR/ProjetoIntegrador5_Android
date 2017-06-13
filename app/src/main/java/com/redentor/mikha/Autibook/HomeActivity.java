@@ -27,6 +27,8 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     FirebaseUser user;
 
+    String userEmail, userNome;
+
     int contadorCor, contadorObjeto, contadorNumero;
 
     @Override
@@ -47,6 +49,8 @@ public class HomeActivity extends AppCompatActivity {
                 main.putExtra("pontuacaoObjeto", contadorObjeto);
                 main.putExtra("pontuacaoCor", contadorCor);
                 main.putExtra("pontuacaoNumero", contadorNumero);
+                main.putExtra("userEmail", userEmail);
+                main.putExtra("userNome", userNome);
                 startActivity(main);
             }
         });
@@ -71,6 +75,9 @@ public class HomeActivity extends AppCompatActivity {
                 Log.v("mapString", map+"");
 
                 if (map != null) {
+
+                    userNome = map.get("username");
+                    userEmail = map.get("email");
                     String pontuacaoObjeto = map.get("pontuacaoObjeto");
                     String pontuacaoCor = map.get("pontuacaoCor");
                     String pontuacaoNumero = map.get("pontuacaoNumero");
