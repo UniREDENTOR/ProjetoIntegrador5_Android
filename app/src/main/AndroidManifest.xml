@@ -16,9 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.redentor.mikha.Autibook.LoginActivity"
+            android:name=".LoginActivity"
             android:label="@string/app_name"
-            android:parentActivityName="com.redentor.mikha.Autibook.Splashscreen"
+            android:parentActivityName=".Splashscreen"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -30,20 +30,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name="com.redentor.mikha.Autibook.Splashscreen">
+        <activity android:name=".Splashscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.redentor.mikha.Autibook.CadastroActivity" />
+        <activity android:name=".CadastroActivity" />
         <activity
-            android:name="com.redentor.mikha.Autibook.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name="com.redentor.mikha.Autibook.PontuacaoUserActivity" />
-        <activity android:name="com.redentor.mikha.Autibook.HomeActivity"></activity>
+        <activity android:name=".PontuacaoUserActivity" />
+        <activity android:name=".HomeActivity" />
     </application>
 
 </manifest>
