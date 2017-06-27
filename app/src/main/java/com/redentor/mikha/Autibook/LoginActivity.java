@@ -1,5 +1,6 @@
 package com.redentor.mikha.Autibook;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -27,6 +28,8 @@ public class LoginActivity extends AppCompatActivity {
     BootstrapEditText passwordLogin;
     BootstrapButton botaoConfirmarLogin, botaoPaginaDeCadastro;
 
+    ProgressDialog prog;
+
     CheckBox check;
 
     public static final String NOME_PREFERENCE = "INFORMACOES_LOGIN_AUTOMATICO";
@@ -40,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         botaoConfirmarLogin = (BootstrapButton) findViewById(R.id.botaoConfirmarLogin);
         botaoPaginaDeCadastro = (BootstrapButton) findViewById(R.id.botaoPaginaDeCadastro);
         check = (CheckBox) findViewById(R.id.checkBox);
+        prog = new ProgressDialog(getWindow().getContext());
+
         mAuth = FirebaseAuth.getInstance();
 
         SharedPreferences prefs = getSharedPreferences(NOME_PREFERENCE, MODE_PRIVATE);
@@ -73,6 +78,8 @@ public class LoginActivity extends AppCompatActivity {
                 }else if (emailLogin.getText().toString().equals("")) {
                     Toast.makeText(LoginActivity.this, "Por favor, digite o email", Toast.LENGTH_LONG).show();
                 }else{
+                    prog.setMessage("logando... aguarde");
+                    prog.show();
                     mAuth.signInWithEmailAndPassword(emailLogin.getText().toString(), passwordLogin.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {

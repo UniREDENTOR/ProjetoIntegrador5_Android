@@ -7,9 +7,9 @@ android {
         applicationId "com.redentor.mikha.Autibook"
         minSdkVersion 15
         targetSdkVersion 25
-        versionName '1.2'
+        versionName '1.3'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        versionCode 3
+        versionCode 4
     }
 
     packagingOptions {

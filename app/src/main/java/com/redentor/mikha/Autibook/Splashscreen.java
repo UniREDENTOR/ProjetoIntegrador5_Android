@@ -17,7 +17,6 @@ public class Splashscreen extends AppCompatActivity {
 
     private void StartAnimations() {
 
-
         splashTread = new Thread () {
             @Override
             public void run() {
@@ -38,7 +37,6 @@ public class Splashscreen extends AppCompatActivity {
                 } finally {
                     Splashscreen.this.finish ();
                 }
-
             }
         };
         splashTread.start ();
