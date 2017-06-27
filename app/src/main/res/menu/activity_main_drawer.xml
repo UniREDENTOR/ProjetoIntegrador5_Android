@@ -4,40 +4,40 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Home" />
+            android:icon="@drawable/ic_home_menu"
+            android:title="Página Inicial" />
         <item
-            android:id="@+id/nav_config"
+            android:id="@+id/nav_reset_fases"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Configurações" />
+            android:title="Resetar as fases" />
         <item
             android:id="@+id/nav_pontuacao"
-            android:icon="@drawable/common_full_open_on_phone"
+            android:icon="@drawable/ic_pontuacao_name"
             android:title="Pontuação" />
 
         <item
             android:id="@+id/nav_login"
-            android:icon="@drawable/common_full_open_on_phone"
+            android:icon="@drawable/ic_login_menu"
             android:title="Login" />
 
         <item
             android:id="@+id/nav_cadastro"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_cadastro_menu"
             android:title="Cadastro" />
 
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Pontuação" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Desempenho" />
-        </menu>
-    </item>
+    <!--<item android:title="Communicate">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="Pontuação" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="Desempenho" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

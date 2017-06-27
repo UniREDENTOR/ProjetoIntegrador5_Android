@@ -1,5 +1,6 @@
 package com.redentor.mikha.Autibook;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -57,11 +58,11 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     Button botaoDeFalar, botaoDeMudarImagem;
 
-    String oqSeraFalado, resposta;
+    String oqSeraFalado, resposta, userName;
 
     DrawerLayout drawer;
 
-    TextView resultadoPalavra, textheaderNome, textheaderEmail;
+    TextView resultadoPalavra, textheaderEmail;
 
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -85,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     View header;
 
+    ProgressDialog prog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,12 +106,12 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         botaoAjuda = (FloatingActionButton) findViewById(R.id.helpButton);
         container = (ConstraintLayout) findViewById(R.id.container);
         linear_container = (LinearLayout) findViewById(R.id.linear_container);
+        prog = new ProgressDialog(getWindow().getContext());
 
         navigationView.bringToFront();
 
         header = navigationView.getHeaderView(0);
 
-        textheaderNome = (TextView)header.findViewById(R.id.textViewNomeHeader);
         textheaderEmail = (TextView)header.findViewById(R.id.textViewEmailHeader);
 
         sharedPreferences = getSharedPreferences("VALUES", MODE_PRIVATE);
@@ -123,8 +126,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
         user = auth.getCurrentUser();
         userDB = databaseRef.child(user.getUid());
 
-        textheaderNome.setText(getIntent().getStringExtra("userNome"));
-        Toast.makeText(getApplicationContext(), textheaderNome.getText(), Toast.LENGTH_SHORT).show();
+
         textheaderEmail.setText(getIntent().getStringExtra("userEmail"));
 
         switch (theme){
@@ -206,7 +208,6 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
             @Override
             public void onClick(View v) {
                 if (botaoDeMudarImagem.getText().equals("Avançar")) {
-
                     if (id==1){
                         if (contadorObjeto+1 <= classeArrays.checarTamanhoArray(id)){
                             linearLayoutDaImagemDoFragment.setBackgroundResource(classeArrays.getImagensObjetos(contadorObjeto));
@@ -227,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
                     }
                     editTextPrincipal.getText().clear();
                 }else if (botaoDeMudarImagem.getText().equals("Voltar")){
-                    Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
                 alterarTelas();
@@ -238,18 +239,18 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+                try {
+                    Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+                    String pontuacaoObjeto = map.get("pontuacaoObjeto");
+                    String pontuacaoCor = map.get("pontuacaoCor");
+                    String pontuacaoNumero = map.get("pontuacaoNumero");
 
-                Log.v("mapString", map+"");
-
-                String pontuacaoObjeto = map.get("pontuacaoObjeto");
-                String pontuacaoCor = map.get("pontuacaoCor");
-                String pontuacaoNumero = map.get("pontuacaoNumero");
-
-                contadorObjeto = Integer.parseInt(pontuacaoObjeto);
-                contadorCor = Integer.parseInt(pontuacaoCor);
-                contadorNumero = Integer.parseInt(pontuacaoNumero);
-
+                    contadorObjeto = Integer.parseInt(pontuacaoObjeto);
+                    contadorCor = Integer.parseInt(pontuacaoCor);
+                    contadorNumero = Integer.parseInt(pontuacaoNumero);
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -299,18 +300,19 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
                 int id = item.getItemId();
                 Fragment fragment = null;
                 Intent intent = null;
-
         switch (id){
             case R.id.nav_home:
-                setTitle("Home");
                 intent = new Intent(MainActivity.this, HomeActivity.class);
                 startActivity(intent);
                 return true;
-//            case R.id.nav_config:
-//                setTitle("Configurações");
-//                fragment = new Cores();
-//                trocaFragmento(fragment, R.id.container);
-//                return true;
+            case R.id.nav_reset_fases:
+                drawer.closeDrawers();
+                mensagemResetFase();
+                databaseRef.child(user.getUid()).child("pontuacaoObjeto").setValue("0");
+                databaseRef.child(user.getUid()).child("pontuacaoCor").setValue("0");
+                databaseRef.child(user.getUid()).child("pontuacaoNumero").setValue("0");
+                prog.hide();
+                return true;
             case R.id.nav_pontuacao:
                 Intent pontuacao = new Intent(MainActivity.this, PontuacaoUserActivity.class);
                 startActivity(pontuacao);
@@ -336,6 +338,13 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
 
     }
 
+    private void mensagemResetFase() {
+        prog.setMessage("Resetando a fase...");
+        prog.setIndeterminate(true);
+        prog.show();
+        Toast.makeText(getApplicationContext(), "Fases resetadas", Toast.LENGTH_SHORT).show();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -350,18 +359,20 @@ public class MainActivity extends AppCompatActivity implements OnFragmentInterac
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+                try {
+                    Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
+                    String pontuacaoObjeto = map.get("pontuacaoObjeto");
+                    String pontuacaoCor = map.get("pontuacaoCor");
+                    String pontuacaoNumero = map.get("pontuacaoNumero");
+                    userName = map.get("username");
 
-                Log.v("mapString", map+"");
+                    contadorObjeto = Integer.parseInt(pontuacaoObjeto);
+                    contadorCor = Integer.parseInt(pontuacaoCor);
+                    contadorNumero = Integer.parseInt(pontuacaoNumero);
 
-                String pontuacaoObjeto = map.get("pontuacaoObjeto");
-                String pontuacaoCor = map.get("pontuacaoCor");
-                String pontuacaoNumero = map.get("pontuacaoNumero");
-
-                contadorObjeto = Integer.parseInt(pontuacaoObjeto);
-                contadorCor = Integer.parseInt(pontuacaoCor);
-                contadorNumero = Integer.parseInt(pontuacaoNumero);
-
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                }
             }
 
             @Override

@@ -48,7 +48,7 @@ public class CadastroActivity extends AppCompatActivity {
         TypefaceProvider.registerDefaultIconSets();
         Firebase.setAndroidContext(this);
         setContentView(R.layout.activity_cadastro);
-        progressDialog = new ProgressDialog(this);
+        progressDialog = new ProgressDialog(getWindow().getContext());
 
         mAuth = FirebaseAuth.getInstance();
         databaseRef = FirebaseDatabase.getInstance().getReference();
@@ -60,6 +60,9 @@ public class CadastroActivity extends AppCompatActivity {
         confirmarCadastro.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                progressDialog.setMessage("registrando...");
+                progressDialog.setIndeterminate(true);
+                progressDialog.show();
                 new CadastrarTask().execute();
             }
         });
@@ -70,8 +73,8 @@ public class CadastroActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressDialog.setMessage("Registrando...");
-            progressDialog.show();
+            progressDialog.setProgress(50);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         }
 
         @Override
@@ -85,7 +88,6 @@ public class CadastroActivity extends AppCompatActivity {
                         saveUser();
                     }
                 });
-                result = "Registro feito";
             }catch (Exception e){
                 Log.e("TAG_ASYNC_TASK", e.getMessage());
             }
@@ -95,7 +97,6 @@ public class CadastroActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             textviewInfo.setText(s);
-            progressDialog.hide();
         }
     }
 
@@ -120,9 +121,9 @@ public class CadastroActivity extends AppCompatActivity {
             //Nome is empty
             Toast.makeText(CadastroActivity.this, "Nome vazio", Toast.LENGTH_SHORT).show();
         }
-        if (TextUtils.isEmpty(senhaDoUsuario.getText().toString())){
+        if (TextUtils.isEmpty(senhaDoUsuario.getText().toString()) || senhaDoUsuario.length() < 6){
             //senha is empty
-            Toast.makeText(CadastroActivity.this, "Senha vazio", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CadastroActivity.this, "A senha deve conter 6 dígitos ou mais", Toast.LENGTH_SHORT).show();
         }
         if (TextUtils.isEmpty(emailDoUsuario.getText().toString())){
             //email is empty
@@ -132,8 +133,6 @@ public class CadastroActivity extends AppCompatActivity {
     }
 
     private void saveUser(){
-        progressDialog.setMessage("Registrando...");
-        progressDialog.show();
         initUser();
         mAuth.createUserWithEmailAndPassword(user.getEmail(), user.getPassword()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -141,11 +140,10 @@ public class CadastroActivity extends AppCompatActivity {
                 if (task.isSuccessful()){
                     firebaseUser = mAuth.getCurrentUser();
                     databaseRef.child(firebaseUser.getUid()).setValue(user);
-                    Log.d("user",user+"");
                     Intent intent = new Intent(CadastroActivity.this, HomeActivity.class);
                     startActivity(intent);
                 }else{
-                    Toast.makeText(CadastroActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                    progressDialog.hide();
                 }
             }
         });

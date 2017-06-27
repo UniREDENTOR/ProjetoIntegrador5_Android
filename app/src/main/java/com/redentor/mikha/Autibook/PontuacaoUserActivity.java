@@ -66,14 +66,18 @@ public class PontuacaoUserActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
+
                 Map<String, String> map = (Map<String, String>) dataSnapshot.getValue();
 
-                Log.v("mapString", map+"");
-
-                pontuacaoObjeto = map.get("pontuacaoObjeto");
-                pontuacaoCor = map.get("pontuacaoCor");
-                pontuacaoNumero = map.get("pontuacaoNumero");
-
+                if (map != null){
+                    pontuacaoObjeto = map.get("pontuacaoObjeto");
+                    pontuacaoCor = map.get("pontuacaoCor");
+                    pontuacaoNumero = map.get("pontuacaoNumero");
+                }else {
+                    pontuacaoObjeto = "0";
+                    pontuacaoCor = "0";
+                    pontuacaoNumero = "0";
+                }
                 pontos.add(pontuacaoCor);
                 pontos.add(pontuacaoNumero);
                 pontos.add(pontuacaoObjeto);
